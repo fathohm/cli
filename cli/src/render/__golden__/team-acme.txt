@@ -1,0 +1,21 @@
+FATHOHM -- git-only reading of acme-api . the humans (3 in its history)
+2026-07-31T00:00:00Z . scorer v4
+
+  SOLE-KEEPER LOAD  .  code with one human name in its history, largest first
+  priya      3 files    32K  ##        25% of the scored code
+  sam        1 file     15K  #         12%
+  marco      1 file    3.9K  #          3%
+  shared     4 files    22K  #         17% . 2+ human names
+  no human   3 files    55K  ###       43% . agent-authored, by declared signals
+
+  five rows, one denominator: they partition the 128K of scored code
+
+  THE DAY THEY LEAVE  .  the whole reading, recomputed without each person
+                         (worst case, git evidence alone)
+  without priya       43% ->  85%   +42 points
+  without sam         43% ->  60%   +17
+  without marco       43% ->  51%    +8
+
+  the handover for one person: fathohm offboard priya
+
+  authorship is declared, not detected: undeclared agent work reads as human.

@@ -1,0 +1,30 @@
+FATHOHM ONE FILE -- src/agents/router.ts
+in job-ai . 2026-07-31T00:00:00Z . scorer v4
+
+  score 0.083 floor . 0.483 ceiling (the line is 0.30)
+
+  factor                   weight floor            ceiling
+  human review depth         0.40 0.00 -> 0.000    1.00 -> 0.400
+  human author recency       0.25 0.25 -> 0.062    0.25 -> 0.062
+  bus factor                 0.25 0.08 -> 0.021    0.08 -> 0.021
+  question answerability     0.10 0.00 -> 0.000    0.00 -> 0.000
+                                  -------------    -------------
+  score                           0.083            0.483
+  question answerability reads 0 on every file: it needs an answer somebody
+  other than the author verified, and git has no such record. Its weight is
+  held rather than shared out, so nothing here can score above 0.900.
+
+  last hand-written: -- . last prompted: 20 days ago
+  1 contributor (prompted-only -- counts as 1/4).
+  pull-request mediated -- a merge or a squash subject touched it, so a review
+  record could exist for it and the ceiling gives it the benefit.
+
+  in this reading it sits with:
+  >99% of the scored bytes were prompted -- written with an agent, never
+  hand-authored and never substantively reviewed. A prompted file counts as a
+  quarter of one engaged person.
+
+  already below the line -- there is nothing left to fade.
+  holds if reviews credited -- full review credit alone keeps this file above
+  the line with no further commits, indefinitely. That is the unmeasured
+  review range doing the work.

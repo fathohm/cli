@@ -1,0 +1,8 @@
+FATHOHM -- git-only reading of assets-only (0 code files)
+2026-07-31T00:00:00Z . scorer v4
+
+  nothing to fathom here yet
+  Nothing in this tree is code -- this reading only measures code, and the
+  files here are assets, lockfiles or media. Commit something to read.
+
+  authorship is declared, not detected: undeclared agent work reads as human.

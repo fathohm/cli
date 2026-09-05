@@ -1,0 +1,32 @@
+{
+  "name": "fathohm",
+  "version": "1.6.0",
+  "description": "How much of your code has gone dark — no human wrote or prompted any of it in the last 180 days? A git-only reading in your terminal: metadata only, never file contents, no network.",
+  "license": "MIT",
+  "homepage": "https://fathohm.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fathohm/cli"
+  },
+  "bugs": {
+    "url": "https://fathohm.dev/support",
+    "email": "hello@fathohm.dev"
+  },
+  "keywords": [
+    "comprehension debt",
+    "code review",
+    "technical debt",
+    "bus factor",
+    "git",
+    "cli"
+  ],
+  "bin": {
+    "fathohm": "dist/fathohm.cjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20.9"
+  }
+}

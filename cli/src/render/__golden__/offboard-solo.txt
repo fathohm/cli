@@ -1,0 +1,37 @@
+FATHOHM -- git-only reading of prompted-only without Ada Lovelace (simulated)
+2026-07-31T00:00:00Z . scorer v4
+their commits stay in git's record -- the simulation removes their engagement
+from every factor
+
+     #  ####  ####  ##   ##
+     #  #  #  #  #  ##  ##
+     #  #  #  #  #     ##    comprehension debt without Ada Lovelace
+     #  #  #  #  #    ## ##
+     #  ####  ####   ##  ##
+
+  100% of this code would sit below the comprehension line the day Ada
+  Lovelace leaves -- the same share as today: removing them moves nothing the
+  card prints (worst case, git evidence alone)
+  best case 100%, unchanged: full review credit for every file that went
+  through a PR -- both recomputed through the same scorer, not estimated
+  the comprehension line: below it, no human has recently written, reviewed,
+  or explained it
+
+  Comprehension debt: code no human has recently written, reviewed, or
+  explained -- measured from the record, not a survey.
+
+  Ada Lovelace is the only human in this history. Without them, no scored file
+  has a human on git's record.
+
+  no file crosses the line without Ada Lovelace -- everything that would lose
+  them was already below it.
+
+  authorship is declared, not detected: undeclared agent work reads as human.
+
+  ----------------------------------------
+  git does not record PR reviews. The GitHub App reads them -- who reviewed
+  Ada Lovelace's files is evidence this simulation cannot see.
+  install the GitHub App -> https://fathohm.dev
+
+  no telemetry, no network: this reading used only your local git history.
+  Verify by running it offline.

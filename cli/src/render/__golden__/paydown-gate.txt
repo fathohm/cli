@@ -1,0 +1,55 @@
+FATHOHM -- git-only reading of job-ai . the paydown ladder
+2026-07-31T00:00:00Z . scorer v4
+git records no reviews -- every rung below is this reading re-scored as if one
+existed
+
+  ##    ####  ####  ##   ##
+   ##   #  #  #  #  ##  ##
+    ##  ####  ####     ##    comprehension debt
+   ##      #     #    ## ##
+  ##    ####  ####   ##  ##
+
+  >99% of this code scores below the comprehension line on git evidence alone
+  (worst case)
+  best case 66%: the same evidence with full review credit for every file that
+  went through a PR -- git does not record reviews
+  the comprehension line: below it, no human has recently written, reviewed,
+  or explained it
+  the ladder is the other question -- not a review that already happened and
+  went unrecorded, but one that has not happened yet
+
+  Comprehension debt: code no human has recently written, reviewed, or
+  explained -- measured from the record, not a survey.
+
+  8 files sit below the line -- 121K of the 122K read. A recorded, commented
+  review lifts every one of them over it: the record weighs more than the line
+  itself.
+
+  THE LADDER  .  what a recorded, commented review would return, cumulative
+  1 file   >99% ->  80%
+  3 files  >99% ->  48%
+  5 files  >99% ->  22%
+  8 files  >99% ->   0%
+
+  THE FILES  .  the ladder, in order: application code first
+  0.08 -> 0.48  src/agents/router.ts   23K
+  0.07 -> 0.47  src/ui/App.tsx         21K
+  0.08 -> 0.48  src/agents/planner.ts  19K
+  0.08 -> 0.48  src/ui/Board.tsx       17K
+  0.07 -> 0.47  src/api/jobs.ts        15K
+
+  3 more on this ladder: fathohm paydown --max-blind 40 --full
+  factor by factor: fathohm explain src/agents/router.ts
+
+  with a recorded, commented review of 3 files: fathohm check --max-blind 40
+  passes -- the gate reads the best case, the ladder the worst
+
+  authorship is declared, not detected: undeclared agent work reads as human.
+
+  ----------------------------------------
+  git does not record PR reviews. The GitHub App reads them -- a review that
+  actually happened moves this number, and the weekly digest carries the move.
+  install the GitHub App -> https://fathohm.dev
+
+  no telemetry, no network: this reading used only your local git history.
+  Verify by running it offline.

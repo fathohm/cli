@@ -1,0 +1,12 @@
+FATHOHM -- check of acme-api . 2026-07-31T00:00:00Z . scorer v4
+
+  PARTIAL READING
+  this clone is shallow: the commits behind the cut were never fetched, so
+  everything above describes the fragment git can see, not the repository.
+  Re-run in a full clone before quoting it.
+  authorship is declared, not detected: undeclared agent work reads as human.
+
+  NO VERDICT -- this history is truncated, so fathohm neither passed nor
+  failed the gate: a verdict on a fragment is a verdict on nothing. Fetch the
+  full history (a clone without --depth, or `git fetch --unshallow`) and run
+  it again.

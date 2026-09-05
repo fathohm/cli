@@ -1,0 +1,19 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "jsx": "react-jsx",
+    "types": ["node"],
+    "incremental": false,
+    "noEmit": true
+  },
+  // `src` and `test`: the shared scoring/reading modules the CLI imports
+  // (`../workers/src/scorer`, `../lib/*`) and the test-only generators
+  // (`../scripts/gen-synthetic-log`) are pulled in by the compiler as they are
+  // referenced, so there is exactly one copy of that logic and no second
+  // include list to keep in sync. Root `paths` (`@/*`) are inherited and
+  // resolve relative to the root tsconfig, so any `@/`-style import inside
+  // those shared modules still resolves from here.
+  "include": ["src/**/*.ts", "test/**/*.ts", "test-helpers/**/*.ts"]
+}

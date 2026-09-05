@@ -1,0 +1,15 @@
+FATHOHM -- git-only reading of prompted-only . the humans (1 in its history)
+2026-07-31T00:00:00Z . scorer v4
+
+  SOLE-KEEPER LOAD  .  code with one human name in its history, largest first
+  Ada Lovelace  6 files    29K  ######################## 100% of the scored code
+
+  one row, one denominator: they partition the 29K of scored code
+
+  THE DAY THEY LEAVE  .  the whole reading, recomputed without each person
+                         (worst case, git evidence alone)
+  without Ada Lovelace  100% -> 100%   moves nothing the card prints
+
+  the handover for one person: fathohm offboard 'Ada Lovelace'
+
+  authorship is declared, not detected: undeclared agent work reads as human.

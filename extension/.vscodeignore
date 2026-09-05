@@ -1,0 +1,18 @@
+# What the .vsix must NOT carry.
+#
+# The extension host runs one file — `dist/extension.js`, the esbuild bundle of
+# `src/` plus the CLI pipeline it imports. Shipping `src/` too would put a
+# second copy of the same code in the package, and the copy nobody runs is the
+# one that drifts. The source stays readable where it is readable: the repo,
+# and the unminified npm tarball the CLI ships.
+src/**
+**/*.test.*
+**/*.map
+**/tsconfig*.json
+node_modules/**
+.gitignore
+
+# The icon SOURCE. `icon.png` is what the Marketplace renders; this is the SVG
+# it was rasterised from, kept in the repo so the PNG can be regenerated and
+# checked against `lib/mark.ts` by `lib/one-logo.guardrail.test.ts`.
+icon.svg

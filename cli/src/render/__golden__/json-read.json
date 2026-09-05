@@ -1,0 +1,459 @@
+{
+  "fathohm": {
+    "cliVersion": "1.6.0",
+    "scorerVersion": "v4"
+  },
+  "command": "read",
+  "now": "2026-07-31T00:00:00.000Z",
+  "target": "acme-api",
+  "provenance": {
+    "shallow": false,
+    "grafted": false,
+    "emptyRepo": false,
+    "squashOnly": false,
+    "sinceBound": null,
+    "atRef": null,
+    "submodulesSkipped": 0,
+    "excluded": {
+      "patterns": [],
+      "fileCount": 0,
+      "bytes": 0
+    },
+    "agentShareIsLowerBound": true
+  },
+  "headline": {
+    "dark": 45.46424759871932,
+    "floor": 72.14514407684098,
+    "ceiling": 23.90608324439701,
+    "fileCount": 12,
+    "scoredBytes": 93700,
+    "darkBytes": 42600,
+    "floorBlindBytes": 67600,
+    "ceilingBlindBytes": 22400,
+    "display": {
+      "dark": "45%",
+      "floor": "72%",
+      "ceiling": "24%"
+    }
+  },
+  "authorshipSignatures": {
+    "claude_code": 25000,
+    "copilot": 0,
+    "cursor": 0,
+    "unsigned": 0,
+    "note": "signature vocabulary is three patterns; unsigned means no recognised trailer, not human"
+  },
+  "buckets": [
+    {
+      "id": "faded",
+      "fileCount": 6,
+      "bytes": 60600,
+      "share": 64.67449306296692,
+      "display": "65%",
+      "sentence": "65% of the scored bytes were hand-written, but last hand-touched 220+ days ago — past the two-month window comprehension holds without review.",
+      "handAgeDays": 220,
+      "reviewLift": 0.49288194444444444
+    },
+    {
+      "id": "above",
+      "fileCount": 4,
+      "bytes": 26100,
+      "share": 27.854855923159015,
+      "display": "28%",
+      "sentence": "4 files hold above the line — recent hand-writing is what holds them up. They are 28% of the scored bytes.",
+      "aboveReason": "fresh"
+    },
+    {
+      "id": "prompted-only",
+      "fileCount": 2,
+      "bytes": 7000,
+      "share": 7.4706510138740665,
+      "display": "7%",
+      "sentence": "7% of the scored bytes were prompted — written with an agent, never hand-authored and never substantively reviewed. A prompted file counts as a quarter of one engaged person.",
+      "reviewLift": 0.4737606095679012
+    }
+  ],
+  "groups": [
+    {
+      "id": "faded-hand",
+      "share": 45.46424759871932,
+      "display": "45%",
+      "fileCount": 5,
+      "paths": [
+        "components/Map.tsx",
+        "lib/map-tree.ts",
+        "lib/palette.ts",
+        "app/layout.tsx",
+        "package.json"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "app/api/route.ts",
+      "bytes": 2600,
+      "floor": 0.3055555555555555,
+      "ceiling": 0.7055555555555556,
+      "prMediated": true,
+      "fadesAt": "2026-08-05",
+      "bucket": "above",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0.8888888888888888,
+        "bus_factor": 0.3333333333333333,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": "2026-06-01T00:00:00.000Z",
+          "last_prompted": null,
+          "contributors": {
+            "full": 1,
+            "prompted": 0
+          }
+        }
+      }
+    },
+    {
+      "path": "app/layout.tsx",
+      "bytes": 4200,
+      "floor": 0.08333333333333333,
+      "ceiling": 0.08333333333333333,
+      "prMediated": false,
+      "fadesAt": null,
+      "bucket": "faded",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0,
+        "bus_factor": 0.3333333333333333,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": "2025-06-26T00:00:00.000Z",
+          "last_prompted": null,
+          "contributors": {
+            "full": 1,
+            "prompted": 0
+          }
+        }
+      }
+    },
+    {
+      "path": "app/page.tsx",
+      "bytes": 18000,
+      "floor": 0.10243055555555555,
+      "ceiling": 0.5024305555555556,
+      "prMediated": true,
+      "fadesAt": null,
+      "bucket": "faded",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0.07638888888888887,
+        "bus_factor": 0.3333333333333333,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": "2025-06-26T00:00:00.000Z",
+          "last_prompted": "2026-03-03T00:00:00.000Z",
+          "contributors": {
+            "full": 1,
+            "prompted": 0
+          }
+        }
+      }
+    },
+    {
+      "path": "cli/src/index.ts",
+      "bytes": 5200,
+      "floor": 0.08159722222222222,
+      "ceiling": 0.48159722222222223,
+      "prMediated": true,
+      "fadesAt": null,
+      "bucket": "prompted-only",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0.24305555555555555,
+        "bus_factor": 0.08333333333333333,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": null,
+          "last_prompted": "2026-07-01T00:00:00.000Z",
+          "contributors": {
+            "full": 0,
+            "prompted": 1
+          }
+        }
+      }
+    },
+    {
+      "path": "components/Map.tsx",
+      "bytes": 22000,
+      "floor": 0.08333333333333333,
+      "ceiling": 0.48333333333333334,
+      "prMediated": true,
+      "fadesAt": null,
+      "bucket": "faded",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0,
+        "bus_factor": 0.3333333333333333,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": "2025-10-04T00:00:00.000Z",
+          "last_prompted": null,
+          "contributors": {
+            "full": 1,
+            "prompted": 0
+          }
+        }
+      }
+    },
+    {
+      "path": "components/Wordmark.tsx",
+      "bytes": 1800,
+      "floor": 0.06592399691358024,
+      "ceiling": 0.06592399691358024,
+      "prMediated": false,
+      "fadesAt": null,
+      "bucket": "prompted-only",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0.18036265432098764,
+        "bus_factor": 0.08333333333333333,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": null,
+          "last_prompted": "2026-04-27T00:00:00.000Z",
+          "contributors": {
+            "full": 0,
+            "prompted": 1
+          }
+        }
+      }
+    },
+    {
+      "path": "lib/map-tree.ts",
+      "bytes": 9100,
+      "floor": 0.16666666666666666,
+      "ceiling": 0.16666666666666666,
+      "prMediated": false,
+      "fadesAt": null,
+      "bucket": "faded",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0,
+        "bus_factor": 0.6666666666666666,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": "2025-12-23T00:00:00.000Z",
+          "last_prompted": null,
+          "contributors": {
+            "full": 2,
+            "prompted": 0
+          }
+        }
+      }
+    },
+    {
+      "path": "lib/palette.ts",
+      "bytes": 6400,
+      "floor": 0.16666666666666666,
+      "ceiling": 0.16666666666666666,
+      "prMediated": false,
+      "fadesAt": null,
+      "bucket": "faded",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0,
+        "bus_factor": 0.6666666666666666,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": "2025-12-23T00:00:00.000Z",
+          "last_prompted": null,
+          "contributors": {
+            "full": 2,
+            "prompted": 0
+          }
+        }
+      }
+    },
+    {
+      "path": "lib/scoring-notes.ts",
+      "bytes": 3400,
+      "floor": 0.3099922839506173,
+      "ceiling": 0.3099922839506173,
+      "prMediated": false,
+      "fadesAt": "2026-08-10",
+      "bucket": "above",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0.9066358024691358,
+        "bus_factor": 0.3333333333333333,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": "2026-06-06T00:00:00.000Z",
+          "last_prompted": null,
+          "contributors": {
+            "full": 1,
+            "prompted": 0
+          }
+        }
+      }
+    },
+    {
+      "path": "package.json",
+      "bytes": 900,
+      "floor": 0.08333333333333333,
+      "ceiling": 0.08333333333333333,
+      "prMediated": false,
+      "fadesAt": null,
+      "bucket": "faded",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0,
+        "bus_factor": 0.3333333333333333,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": "2025-06-26T00:00:00.000Z",
+          "last_prompted": null,
+          "contributors": {
+            "full": 1,
+            "prompted": 0
+          }
+        }
+      }
+    },
+    {
+      "path": "workers/src/index.ts",
+      "bytes": 7300,
+      "floor": 0.32098765432098764,
+      "ceiling": 0.32098765432098764,
+      "prMediated": false,
+      "fadesAt": "2026-08-25",
+      "bucket": "above",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0.9506172839506173,
+        "bus_factor": 0.3333333333333333,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": "2026-06-21T00:00:00.000Z",
+          "last_prompted": null,
+          "contributors": {
+            "full": 1,
+            "prompted": 0
+          }
+        }
+      }
+    },
+    {
+      "path": "workers/src/scorer.ts",
+      "bytes": 12800,
+      "floor": 0.41555555555555557,
+      "ceiling": 0.41555555555555557,
+      "prMediated": false,
+      "fadesAt": null,
+      "bucket": "above",
+      "factors": {
+        "human_review_depth": 0,
+        "human_author_recency": 0.9955555555555555,
+        "bus_factor": 0.6666666666666666,
+        "question_answerability": 0,
+        "engagement": {
+          "last_hand_authored": "2026-07-19T00:00:00.000Z",
+          "last_prompted": null,
+          "contributors": {
+            "full": 2,
+            "prompted": 0
+          }
+        }
+      }
+    }
+  ],
+  "tide": {
+    "past": [
+      {
+        "at": "2025-07-31T00:00:00.000Z",
+        "floor": 35.32550693703308,
+        "ceiling": 35.32550693703308
+      },
+      {
+        "at": "2025-08-31T00:00:00.000Z",
+        "floor": 100,
+        "ceiling": 100
+      },
+      {
+        "at": "2025-09-30T00:00:00.000Z",
+        "floor": 100,
+        "ceiling": 100
+      },
+      {
+        "at": "2025-10-31T00:00:00.000Z",
+        "floor": 76.52081109925294,
+        "ceiling": 76.52081109925294
+      },
+      {
+        "at": "2025-11-30T00:00:00.000Z",
+        "floor": 76.52081109925294,
+        "ceiling": 76.52081109925294
+      },
+      {
+        "at": "2025-12-31T00:00:00.000Z",
+        "floor": 83.45784418356456,
+        "ceiling": 83.45784418356456
+      },
+      {
+        "at": "2026-01-31T00:00:00.000Z",
+        "floor": 83.45784418356456,
+        "ceiling": 83.45784418356456
+      },
+      {
+        "at": "2026-02-28T00:00:00.000Z",
+        "floor": 83.45784418356456,
+        "ceiling": 83.45784418356456
+      },
+      {
+        "at": "2026-03-31T00:00:00.000Z",
+        "floor": 83.45784418356456,
+        "ceiling": 83.45784418356456
+      },
+      {
+        "at": "2026-04-30T00:00:00.000Z",
+        "floor": 100,
+        "ceiling": 57.31056563500534
+      },
+      {
+        "at": "2026-05-31T00:00:00.000Z",
+        "floor": 100,
+        "ceiling": 57.31056563500534
+      },
+      {
+        "at": "2026-06-30T00:00:00.000Z",
+        "floor": 72.14514407684098,
+        "ceiling": 29.455709711846318
+      }
+    ],
+    "today": {
+      "at": "2026-07-31T00:00:00.000Z",
+      "floor": 72.14514407684098,
+      "ceiling": 23.90608324439701
+    },
+    "forecast": [
+      {
+        "at": "2026-08-30T00:00:00.000Z",
+        "floor": 86.33938100320171,
+        "ceiling": 35.32550693703308
+      },
+      {
+        "at": "2026-09-29T00:00:00.000Z",
+        "floor": 86.33938100320171,
+        "ceiling": 35.32550693703308
+      },
+      {
+        "at": "2026-10-29T00:00:00.000Z",
+        "floor": 86.33938100320171,
+        "ceiling": 35.32550693703308
+      }
+    ],
+    "nextToFade": {
+      "path": "app/api/route.ts",
+      "at": "2026-08-05"
+    }
+  }
+}

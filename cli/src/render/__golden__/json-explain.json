@@ -1,0 +1,69 @@
+{
+  "fathohm": {
+    "cliVersion": "1.6.0",
+    "scorerVersion": "v4"
+  },
+  "command": "explain",
+  "now": "2026-07-31T00:00:00.000Z",
+  "target": "job-ai",
+  "provenance": {
+    "shallow": false,
+    "grafted": false,
+    "emptyRepo": false,
+    "squashOnly": false,
+    "sinceBound": null,
+    "atRef": null,
+    "submodulesSkipped": 0,
+    "excluded": {
+      "patterns": [],
+      "fileCount": 0,
+      "bytes": 0
+    },
+    "agentShareIsLowerBound": true
+  },
+  "headline": {
+    "dark": 16.00640256102441,
+    "floor": 99.23969587835134,
+    "ceiling": 66.4265706282513,
+    "fileCount": 11,
+    "scoredBytes": 124950,
+    "darkBytes": 20000,
+    "floorBlindBytes": 124000,
+    "ceilingBlindBytes": 83000,
+    "display": {
+      "dark": "16%",
+      "floor": ">99%",
+      "ceiling": "66%"
+    }
+  },
+  "authorshipSignatures": {
+    "claude_code": 124000,
+    "copilot": 0,
+    "cursor": 0,
+    "unsigned": 0,
+    "note": "signature vocabulary is three patterns; unsigned means no recognised trailer, not human"
+  },
+  "file": {
+    "path": "src/agents/router.ts",
+    "bytes": 24000,
+    "floor": 0.08256172839506172,
+    "ceiling": 0.48256172839506173,
+    "prMediated": true,
+    "fadesAt": null,
+    "bucket": "prompted-only",
+    "factors": {
+      "human_review_depth": 0,
+      "human_author_recency": 0.24691358024691357,
+      "bus_factor": 0.08333333333333333,
+      "question_answerability": 0,
+      "engagement": {
+        "last_hand_authored": null,
+        "last_prompted": "2026-07-11T00:00:00.000Z",
+        "contributors": {
+          "full": 0,
+          "prompted": 1
+        }
+      }
+    }
+  }
+}

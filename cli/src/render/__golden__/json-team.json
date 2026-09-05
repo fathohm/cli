@@ -1,0 +1,120 @@
+{
+  "fathohm": {
+    "cliVersion": "1.6.0",
+    "scorerVersion": "v4"
+  },
+  "command": "team",
+  "now": "2026-07-31T00:00:00.000Z",
+  "target": "acme-api",
+  "provenance": {
+    "shallow": false,
+    "grafted": false,
+    "emptyRepo": false,
+    "squashOnly": false,
+    "sinceBound": null,
+    "atRef": null,
+    "submodulesSkipped": 0,
+    "excluded": {
+      "patterns": [],
+      "fileCount": 0,
+      "bytes": 0
+    },
+    "agentShareIsLowerBound": true
+  },
+  "headline": {
+    "dark": 43.425076452599384,
+    "floor": 43.425076452599384,
+    "ceiling": 9.021406727828746,
+    "fileCount": 12,
+    "scoredBytes": 130800,
+    "darkBytes": 56800,
+    "floorBlindBytes": 56800,
+    "ceilingBlindBytes": 11800,
+    "display": {
+      "dark": "43%",
+      "floor": "43%",
+      "ceiling": "9%"
+    }
+  },
+  "authorshipSignatures": {
+    "claude_code": 56000,
+    "copilot": 0,
+    "cursor": 0,
+    "unsigned": 0,
+    "note": "signature vocabulary is three patterns; unsigned means no recognised trailer, not human"
+  },
+  "team": {
+    "rows": [
+      {
+        "kind": "keeper",
+        "key": "priya@acme.dev",
+        "name": "priya",
+        "fileCount": 3,
+        "bytes": 33000,
+        "share": 25.229357798165136,
+        "units": 25,
+        "display": "25%"
+      },
+      {
+        "kind": "keeper",
+        "key": "sam@acme.dev",
+        "name": "sam",
+        "fileCount": 1,
+        "bytes": 15000,
+        "share": 11.46788990825688,
+        "units": 12,
+        "display": "12%"
+      },
+      {
+        "kind": "keeper",
+        "key": "marco@acme.dev",
+        "name": "marco",
+        "fileCount": 1,
+        "bytes": 4000,
+        "share": 3.058103975535168,
+        "units": 3,
+        "display": "3%"
+      },
+      {
+        "kind": "shared",
+        "key": "",
+        "name": "shared",
+        "fileCount": 4,
+        "bytes": 22800,
+        "share": 17.431192660550458,
+        "units": 17,
+        "display": "17%"
+      },
+      {
+        "kind": "no-human",
+        "key": "",
+        "name": "no-human",
+        "fileCount": 3,
+        "bytes": 56000,
+        "share": 42.813455657492355,
+        "units": 43,
+        "display": "43%"
+      }
+    ],
+    "leave": [
+      {
+        "key": "priya@acme.dev",
+        "name": "priya",
+        "before": 43.425076452599384,
+        "after": 85.47400611620795
+      },
+      {
+        "key": "sam@acme.dev",
+        "name": "sam",
+        "before": 43.425076452599384,
+        "after": 60.24464831804281
+      },
+      {
+        "key": "marco@acme.dev",
+        "name": "marco",
+        "before": 43.425076452599384,
+        "after": 51.07033639143731
+      }
+    ]
+  }
+}

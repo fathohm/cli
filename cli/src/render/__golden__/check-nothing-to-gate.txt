@@ -1,0 +1,6 @@
+FATHOHM -- check of assets-only . 2026-07-31T00:00:00Z . scorer v4
+
+  PASS -- nothing to fathom here yet: this tree holds no code to gate, so
+  there is no debt to measure against your limit of 0%.
+
+  authorship is declared, not detected: undeclared agent work reads as human.

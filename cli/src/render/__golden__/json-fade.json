@@ -1,0 +1,72 @@
+{
+  "fathohm": {
+    "cliVersion": "1.6.0",
+    "scorerVersion": "v4"
+  },
+  "command": "fade",
+  "now": "2026-07-31T00:00:00.000Z",
+  "target": "acme-api",
+  "provenance": {
+    "shallow": false,
+    "grafted": false,
+    "emptyRepo": false,
+    "squashOnly": false,
+    "sinceBound": null,
+    "atRef": null,
+    "submodulesSkipped": 0,
+    "excluded": {
+      "patterns": [],
+      "fileCount": 0,
+      "bytes": 0
+    },
+    "agentShareIsLowerBound": true
+  },
+  "headline": {
+    "dark": 45.46424759871932,
+    "floor": 72.14514407684098,
+    "ceiling": 23.90608324439701,
+    "fileCount": 12,
+    "scoredBytes": 93700,
+    "darkBytes": 42600,
+    "floorBlindBytes": 67600,
+    "ceilingBlindBytes": 22400,
+    "display": {
+      "dark": "45%",
+      "floor": "72%",
+      "ceiling": "24%"
+    }
+  },
+  "authorshipSignatures": {
+    "claude_code": 25000,
+    "copilot": 0,
+    "cursor": 0,
+    "unsigned": 0,
+    "note": "signature vocabulary is three patterns; unsigned means no recognised trailer, not human"
+  },
+  "crossings": {
+    "horizonDays": 90,
+    "files": [
+      {
+        "path": "app/api/route.ts",
+        "bytes": 2600,
+        "floor": 0.3055555555555555,
+        "fadesAt": "2026-08-05",
+        "holdsAtCeiling": true
+      },
+      {
+        "path": "lib/scoring-notes.ts",
+        "bytes": 3400,
+        "floor": 0.3099922839506173,
+        "fadesAt": "2026-08-10",
+        "holdsAtCeiling": false
+      },
+      {
+        "path": "workers/src/index.ts",
+        "bytes": 7300,
+        "floor": 0.32098765432098764,
+        "fadesAt": "2026-08-25",
+        "holdsAtCeiling": false
+      }
+    ]
+  }
+}

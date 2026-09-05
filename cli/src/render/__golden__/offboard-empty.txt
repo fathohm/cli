@@ -1,0 +1,11 @@
+FATHOHM -- git-only reading of fresh-repo without priya (simulated)
+2026-07-31T00:00:00Z . scorer v4
+their commits stay in git's record -- the simulation removes their engagement
+from every factor
+
+  nothing to fathom here yet
+  This repository has no commits, so there is no history to read.
+
+  authorship is declared, not detected: undeclared agent work reads as human.
+  --without "priya" matched nobody in this history -- the reading above is
+  unchanged. Try the address they commit from.

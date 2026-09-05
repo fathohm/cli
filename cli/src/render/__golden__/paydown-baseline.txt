@@ -1,0 +1,60 @@
+FATHOHM -- git-only reading of acme-api . the paydown ladder
+baseline: without sam . 2026-07-31T00:00:00Z . scorer v4
+git records no reviews -- every rung below is this reading re-scored as if one
+existed
+
+  ####  ####  ##   ##
+  #     #  #  ##  ##
+  ####  #  #     ##    comprehension debt
+  #  #  #  #    ## ##
+  ####  ####   ##  ##
+
+  60% of this code scores below the comprehension line on git evidence alone
+  (worst case)
+  this number is exact: nothing below the line ever went through a pull
+  request, so no review already on the record could have lifted it.
+  the comprehension line: below it, no human has recently written, reviewed,
+  or explained it
+  the ladder is the other question -- not a review that already happened and
+  went unrecorded, but one that has not happened yet
+
+  Comprehension debt: code no human has recently written, reviewed, or
+  explained -- measured from the record, not a survey.
+
+  6 files sit below the line -- 77K of the 128K read. A recorded, commented
+  review lifts every one of them over it: the record weighs more than the line
+  itself.
+
+  THE LADDER  .  what a recorded, commented review would return, cumulative
+  1 file   60% -> 42%
+  3 files  60% -> 14%
+  5 files  60% -> <1%
+  6 files  60% ->  0%
+
+  THE FILES  .  the ladder, in order: application code first
+  0.00 -> 0.40  app/ui/Board.tsx      23K
+  0.00 -> 0.40  app/ui/Table.tsx      21K
+  0.00 -> 0.40  lib/search/index.ts   15K
+  0.00 -> 0.40  workers/queue.ts      11K
+  0.16 -> 0.56  lib/tax/rates.ts     6.8K
+
+  1 more on this ladder: fathohm paydown --without sam --max-blind 40
+  --pessimistic --full
+  factor by factor: fathohm explain app/ui/Board.tsx --without sam
+
+  with a recorded, commented review of 3 files: fathohm check --without sam
+  --max-blind 40 --pessimistic passes -- the gate and the ladder read the same
+  end, the worst case
+
+  the ceiling rests on subject lines: this history has squash-merge subjects
+  and not one two-parent merge, so pull-request mediation was inferred from a
+  naming convention.
+  authorship is declared, not detected: undeclared agent work reads as human.
+
+  ----------------------------------------
+  git does not record PR reviews. The GitHub App reads them -- a review that
+  actually happened moves this number, and the weekly digest carries the move.
+  install the GitHub App -> https://fathohm.dev
+
+  no telemetry, no network: this reading used only your local git history.
+  Verify by running it offline.

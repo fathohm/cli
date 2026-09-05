@@ -1,0 +1,60 @@
+FATHOHM -- git-only reading of squashed (3 code files)
+2026-07-31T00:00:00Z . scorer v4
+
+  #  #  ####  ##   ##
+  #  #     #  ##  ##
+  ####  ####     ##    GONE DARK
+     #  #       ## ##
+     #  ####   ##  ##
+
+  42% of this code has gone dark: no human has written or prompted any of it
+  in the last 180 days (exact -- git records every commit's author and date).
+
+  start here: src/index.ts . prompted 200d ago . 1 human in its history
+
+  Every one of these 3 files has exactly one human in its history: when that
+  person stops committing, nothing keeps the file lit.
+
+  to see who they are: fathohm team
+
+  WHERE THE DARK CODE IS  .  bar length = share of this repository
+  # = gone dark     . = a human wrote or prompted it recently
+  src/                     ###############.................... 100% . 42% dark
+
+  GONE DARK (nobody wrote or prompted it in 180d)
+  application code first . config, sql, scripts . then tests & styles
+
+  PROMPTED, BUT 200+ DAYS AGO -- 42% OF THE CODE
+  src/index.ts  prompted 200d ago . 1 human in its history
+
+  still lit -- 58% of the code . a human wrote or prompted it inside the last
+  180 days (2 files)
+
+  factor by factor: fathohm explain src/index.ts
+
+  the ceiling rests on subject lines: this history has squash-merge subjects
+  and not one two-parent merge, so pull-request mediation was inferred from a
+  naming convention.
+  authorship is declared, not detected: undeclared agent work reads as human.
+
+  ----------------------------------------
+  COMPREHENSION DEBT -- git alone cannot measure it
+  Comprehension debt: code no human has recently written, reviewed, or
+  explained -- measured from the record, not a survey.
+    75%  if no pull request here was ever reviewed in depth -- git records no
+         reviews, so this is the record as it stands
+     0%  if every pull request was reviewed in depth
+  git cannot say which. That is the gap, not a margin of error.
+
+  TREND -- today's files, re-scored as of each date
+    6 months ago  33% - 100%
+    today           0% - 75%
+    in 90 days     0% - 100%   with no new commits
+  git's record here starts 2026-01-12, so there is no full year to draw.
+  next file to cross into debt: src/parse.ts (2026-09-14)
+
+  git does not record PR reviews. The GitHub App reads them and settles which
+  reading is right -- https://fathohm.dev
+
+  no telemetry, no network: this reading used only your local git history.
+  Verify by running it offline.

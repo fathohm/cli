@@ -1,0 +1,5 @@
+# the bundled extension host entry (built by `npm run extension:build`)
+dist/
+
+# the packaged extension (built by `npm run extension:package`)
+*.vsix

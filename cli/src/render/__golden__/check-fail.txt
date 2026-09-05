@@ -1,0 +1,8 @@
+FATHOHM -- check of acme-api . 2026-07-31T00:00:00Z . scorer v4
+
+  FAIL -- even with full credit for every review git cannot see, 24% of this
+  repository sits below the line (22K of the 92K read), over your limit of 5%.
+
+  the ladder back under this limit: fathohm paydown --max-blind 5
+
+  authorship is declared, not detected: undeclared agent work reads as human.

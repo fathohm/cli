@@ -1,0 +1,25 @@
+[38;5;200;1mFATHOHM[0m [38;5;200mONE FILE[0m — [38;5;131mworkers/src/scorer.ts[0m
+[2min acme-api · 2026-07-31T00:00:00Z · scorer v4[0m
+
+  score [38;5;131m0.416[0m [2m(the line is 0.30)[0m
+
+[38;5;200m  factor                   weight floor            ceiling[0m
+  human review depth         0.40 [38;5;196m0.00 → 0.000     [0m[38;5;196m0.00 → 0.000[0m
+  human author recency       0.25 [38;5;33m1.00 → 0.249     [0m[38;5;33m1.00 → 0.249[0m
+  bus factor                 0.25 [38;5;69m0.67 → 0.167     [0m[38;5;69m0.67 → 0.167[0m
+  question answerability     0.10 [2m0.00 → 0.000     0.00 → 0.000[0m
+                                  ─────────────    ─────────────
+  [38;5;200mscore                   [0m        [38;5;131m0.416            [0m[38;5;131m0.416[0m
+[2m  question answerability reads 0 on every file: it needs an answer somebody[0m
+[2m  other than the author verified, and git has no such record. Its weight is[0m
+[2m  held rather than shared out, so nothing here can score above 0.900.[0m
+
+  last hand-written: 12 days ago · last prompted: —
+  never pull-request mediated — there is no review record this file could
+  have, so its ceiling is its floor and this reading of it is exact.
+
+[38;5;200m  in this reading it sits with:[0m
+  4 files hold above the line — recent hand-writing is what holds them up.
+  They are 28% of the scored bytes.
+
+[38;5;131m  holds past the horizon — no crossing within 90 days.[0m

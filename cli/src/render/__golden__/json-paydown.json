@@ -1,0 +1,129 @@
+{
+  "fathohm": {
+    "cliVersion": "1.6.0",
+    "scorerVersion": "v4"
+  },
+  "command": "paydown",
+  "now": "2026-07-31T00:00:00.000Z",
+  "target": "acme-api",
+  "provenance": {
+    "shallow": false,
+    "grafted": false,
+    "emptyRepo": false,
+    "squashOnly": false,
+    "sinceBound": null,
+    "atRef": null,
+    "submodulesSkipped": 0,
+    "excluded": {
+      "patterns": [],
+      "fileCount": 0,
+      "bytes": 0
+    },
+    "agentShareIsLowerBound": true
+  },
+  "headline": {
+    "dark": 45.46424759871932,
+    "floor": 72.14514407684098,
+    "ceiling": 23.90608324439701,
+    "fileCount": 12,
+    "scoredBytes": 93700,
+    "darkBytes": 42600,
+    "floorBlindBytes": 67600,
+    "ceilingBlindBytes": 22400,
+    "display": {
+      "dark": "45%",
+      "floor": "72%",
+      "ceiling": "24%"
+    }
+  },
+  "authorshipSignatures": {
+    "claude_code": 25000,
+    "copilot": 0,
+    "cursor": 0,
+    "unsigned": 0,
+    "note": "signature vocabulary is three patterns; unsigned means no recognised trailer, not human"
+  },
+  "paydown": {
+    "before": {
+      "floorBlindShare": 72.14514407684098,
+      "ceilingBlindShare": 23.90608324439701
+    },
+    "rungs": [
+      {
+        "files": 1,
+        "floor": 48.66595517609392,
+        "ceiling": 23.90608324439701,
+        "floorBlindBytes": 45600,
+        "ceilingBlindBytes": 22400,
+        "display": {
+          "floor": "49%",
+          "ceiling": "24%"
+        }
+      },
+      {
+        "files": 3,
+        "floor": 19.74386339381003,
+        "ceiling": 14.194236926360727,
+        "floorBlindBytes": 18500,
+        "ceilingBlindBytes": 13300,
+        "display": {
+          "floor": "20%",
+          "ceiling": "14%"
+        }
+      },
+      {
+        "files": 5,
+        "floor": 7.363927427961579,
+        "ceiling": 7.363927427961579,
+        "floorBlindBytes": 6900,
+        "ceilingBlindBytes": 6900,
+        "display": {
+          "floor": "7%",
+          "ceiling": "7%"
+        }
+      },
+      {
+        "files": 8,
+        "floor": 0,
+        "ceiling": 0,
+        "floorBlindBytes": 0,
+        "ceilingBlindBytes": 0,
+        "display": {
+          "floor": "0%",
+          "ceiling": "0%"
+        }
+      }
+    ],
+    "liftable": {
+      "files": 8,
+      "bytes": 67600,
+      "share": 72.14514407684098,
+      "display": "72%"
+    },
+    "unliftable": {
+      "files": 0,
+      "bytes": 0,
+      "share": 0,
+      "display": "0%"
+    },
+    "paths": [
+      "components/Map.tsx",
+      "app/page.tsx",
+      "lib/map-tree.ts",
+      "lib/palette.ts",
+      "cli/src/index.ts",
+      "app/layout.tsx",
+      "components/Wordmark.tsx",
+      "package.json"
+    ],
+    "gate": {
+      "threshold": 40,
+      "bound": "ceiling",
+      "passesToday": true,
+      "passesAt": 0,
+      "display": {
+        "threshold": "40%"
+      }
+    }
+  }
+}

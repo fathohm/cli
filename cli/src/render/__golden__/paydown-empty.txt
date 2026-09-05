@@ -1,0 +1,9 @@
+FATHOHM -- git-only reading of fresh-repo . the paydown ladder
+2026-07-31T00:00:00Z . scorer v4
+git records no reviews -- every rung below is this reading re-scored as if one
+existed
+
+  nothing to fathom here yet
+  This repository has no commits, so there is no history to read.
+
+  authorship is declared, not detected: undeclared agent work reads as human.

@@ -1,0 +1,12 @@
+FATHOHM -- git-only reading of agent-only . the humans (0 in its history)
+2026-07-31T00:00:00Z . scorer v4
+
+  SOLE-KEEPER LOAD  .  code with one human name in its history, largest first
+  no human   3 files    24K  ######## 100% . agent-authored, by declared signals
+
+  one row, one denominator: they partition the 24K of scored code
+
+  no human name appears anywhere in this history, so there is nobody to
+  remove.
+
+  authorship is declared, not detected: undeclared agent work reads as human.

@@ -1,0 +1,5 @@
+FATHOHM -- prompted-only . crossings within 90 days
+2026-07-31T00:00:00Z . scorer v4
+
+  Every scored file is already below the line -- there is nothing left to
+  fade.

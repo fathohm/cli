@@ -1,0 +1,25 @@
+FATHOHM ONE FILE -- workers/src/scorer.ts
+in acme-api . 2026-07-31T00:00:00Z . scorer v4
+
+  score 0.416 (the line is 0.30)
+
+  factor                   weight floor            ceiling
+  human review depth         0.40 0.00 -> 0.000    0.00 -> 0.000
+  human author recency       0.25 1.00 -> 0.249    1.00 -> 0.249
+  bus factor                 0.25 0.67 -> 0.167    0.67 -> 0.167
+  question answerability     0.10 0.00 -> 0.000    0.00 -> 0.000
+                                  -------------    -------------
+  score                           0.416            0.416
+  question answerability reads 0 on every file: it needs an answer somebody
+  other than the author verified, and git has no such record. Its weight is
+  held rather than shared out, so nothing here can score above 0.900.
+
+  last hand-written: 12 days ago . last prompted: --
+  never pull-request mediated -- there is no review record this file could
+  have, so its ceiling is its floor and this reading of it is exact.
+
+  in this reading it sits with:
+  4 files hold above the line -- recent hand-writing is what holds them up.
+  They are 28% of the scored bytes.
+
+  holds past the horizon -- no crossing within 90 days.

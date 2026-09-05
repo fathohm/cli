@@ -1,0 +1,57 @@
+FATHOHM -- git-only reading of acme-api/lib (3 code files)
+2026-07-31T00:00:00Z . scorer v4
+Reading: lib/ -- 3 files, 18K, scoped; the repository's own number is different
+
+  ####  ####  ##   ##
+  #  #     #  ##  ##
+  ####  ####     ##    GONE DARK
+  #  #  #       ## ##
+  ####  ####   ##  ##
+
+  82% of this code has gone dark: no human has written or prompted any of it
+  in the last 180 days (exact -- git records every commit's author and date).
+
+  start here: lib/map-tree.ts . hand-written 220d ago . 2 humans in its
+    history
+
+  1 of 3 files -- 18% of the code -- have exactly one human in their history:
+  when that person stops committing, nothing keeps the file lit.
+
+  to see who they are: fathohm team
+
+  WHERE THE DARK CODE IS  .  bar length = share of this reading
+  # = gone dark     . = a human wrote or prompted it recently
+  lib/                     #############################...... 100% . 82% dark
+
+  GONE DARK (nobody wrote or prompted it in 180d)
+  application code first . config, sql, scripts . then tests & styles
+
+  HAND-WRITTEN, BUT 220+ DAYS AGO -- 82% OF THE CODE
+  lib/map-tree.ts  hand-written 220d ago . 2 humans in its history
+  lib/palette.ts   hand-written 220d ago . 2 humans in its history
+
+  still lit -- 18% of the code . a human wrote or prompted it inside the last
+  180 days (1 file)
+
+  factor by factor: fathohm explain lib/map-tree.ts
+
+  authorship is declared, not detected: undeclared agent work reads as human.
+
+  ----------------------------------------
+  COMPREHENSION DEBT -- git alone cannot measure it
+  Comprehension debt: code no human has recently written, reviewed, or
+  explained -- measured from the record, not a survey.
+    82% here, and it is exact: nothing counted as debt ever went through a
+    pull request, so no review credit could lower it.
+
+  TREND -- today's files, re-scored as of each date
+    12 months ago  18%
+    today          82%
+    in 90 days    100%   with no new commits
+  next file to cross into debt: lib/scoring-notes.ts (2026-08-10)
+
+  git does not record PR reviews. The GitHub App reads them and settles which
+  reading is right -- https://fathohm.dev
+
+  no telemetry, no network: this reading used only your local git history.
+  Verify by running it offline.

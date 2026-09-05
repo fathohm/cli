@@ -1,0 +1,47 @@
+FATHOHM -- git-only reading of acme-api without priya (simulated)
+2026-07-31T00:00:00Z . scorer v4
+their commits stay in git's record -- the simulation removes their engagement
+from every factor
+
+  ####  ####  ##   ##
+  #  #  #     ##  ##
+  ####  ####     ##    comprehension debt without priya
+  #  #     #    ## ##
+  ####  ####   ##  ##
+
+  85% of this code would sit below the comprehension line the day priya leaves
+  -- up from 43% today (worst case, git evidence alone)
+  best case 51%, up from 9%: full review credit for every file that went
+  through a PR -- both recomputed through the same scorer, not estimated
+  the comprehension line: below it, no human has recently written, reviewed,
+  or explained it
+
+  Comprehension debt: code no human has recently written, reviewed, or
+  explained -- measured from the record, not a survey.
+
+  3 files -- 32K, 25% of the scored code -- have priya as the only human in
+  their history
+
+  HANDOVER  .  crosses the line without priya, application code first
+  0.33 -> 0.00  lib/billing/invoice.ts     only human in its history
+  0.33 -> 0.00  lib/billing/proration.ts   only human in its history
+  0.41 -> 0.08  app/api/webhooks/route.ts  newest human commit falls to 200d ago
+  0.34 -> 0.26  lib/tax/rates.ts           1 of 2 humans in its history
+  0.32 -> 0.24  app/jobs/retry.ts          1 of 2 humans in its history
+
+  1 more cross with them gone: fathohm offboard priya --full
+  removing a person never raises a file's score -- everything below the line
+  today stays below
+
+  factor by factor, after they leave: fathohm explain lib/billing/invoice.ts
+  --without priya
+
+  authorship is declared, not detected: undeclared agent work reads as human.
+
+  ----------------------------------------
+  git does not record PR reviews. The GitHub App reads them -- who reviewed
+  priya's files is evidence this simulation cannot see.
+  install the GitHub App -> https://fathohm.dev
+
+  no telemetry, no network: this reading used only your local git history.
+  Verify by running it offline.

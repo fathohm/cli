@@ -1,0 +1,38 @@
+FATHOHM -- git-only reading of prompted-only (6 code files)
+2026-07-31T00:00:00Z . scorer v4
+
+  None of this code has gone dark: a human wrote or prompted every one of
+  these 6 files within the last 180 days.
+
+  100% of it is code no human has recently written, reviewed, or explained --
+  the question git cannot close alone. The block below decomposes it.
+
+  Every one of these 6 files has exactly one human in its history: when that
+  person stops committing, nothing keeps the file lit.
+
+  to see who they are: fathohm team
+
+  WHERE THE CODE IS  .  bar length = share of this repository
+  src/                     ................................     91%
+  test/                    ..                                    7%
+  ./                       .                                     3%
+
+  authorship is declared, not detected: undeclared agent work reads as human.
+
+  ----------------------------------------
+  COMPREHENSION DEBT -- git alone cannot measure it
+  Comprehension debt: code no human has recently written, reviewed, or
+  explained -- measured from the record, not a survey.
+    100% here, and it is exact: nothing counted as debt ever went through a
+    pull request, so no review credit could lower it.
+
+  TREND -- today's files, re-scored as of each date
+    100% throughout, unchanged over the 3 months read, and unchanged in 90
+    days with no new commits.
+  git's record here starts 2026-04-02, so there is no full year to draw.
+
+  git does not record PR reviews. The GitHub App reads them and settles which
+  reading is right -- https://fathohm.dev
+
+  no telemetry, no network: this reading used only your local git history.
+  Verify by running it offline.

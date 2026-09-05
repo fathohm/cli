@@ -1,0 +1,36 @@
+FATHOHM -- git-only reading of acme-api without pryia (simulated)
+2026-07-31T00:00:00Z . scorer v4
+their commits stay in git's record -- the simulation removes their engagement
+from every factor
+
+  #  #  ####  ##   ##
+  #  #     #  ##  ##
+  ####  ####     ##    comprehension debt without pryia
+     #     #    ## ##
+     #  ####   ##  ##
+
+  43% of this code sits below the comprehension line on git evidence alone
+  (worst case) -- nobody in this history is named pryia, so nothing was
+  removed
+  best case 9%: the same evidence with full review credit for every file that
+  went through a PR -- git does not record reviews
+  the comprehension line: below it, no human has recently written, reviewed,
+  or explained it
+
+  Comprehension debt: code no human has recently written, reviewed, or
+  explained -- measured from the record, not a survey.
+
+  the reading is unchanged -- nothing crossed the line, because nobody's
+  engagement was removed.
+
+  authorship is declared, not detected: undeclared agent work reads as human.
+  --without "pryia" matched nobody in this history -- the reading above is
+  unchanged. Try the address they commit from.
+
+  ----------------------------------------
+  git does not record PR reviews. The GitHub App reads them -- who reviewed
+  pryia's files is evidence this simulation cannot see.
+  install the GitHub App -> https://fathohm.dev
+
+  no telemetry, no network: this reading used only your local git history.
+  Verify by running it offline.

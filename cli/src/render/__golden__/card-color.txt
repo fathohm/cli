@@ -1,0 +1,66 @@
+[38;5;200;1mFATHOHM[0m — [38;5;243mgit-only reading of acme-api (12 code files)[0m
+[2m2026-07-31T00:00:00Z · scorer v4[0m
+
+  [38;5;243m█  █  ████  ██   ██[0m
+  [38;5;243m█  █  █     ██  ██[0m
+  [38;5;243m████  ████     ██  [0m  GONE DARK
+  [38;5;243m   █     █    ██ ██[0m
+  [38;5;243m   █  ████   ██  ██[0m
+
+  [38;5;243m45%[0m of this code has gone dark: no human has written or prompted any of it
+  in the last 180 days (exact — git records every commit's author and date).
+
+  [38;5;200;1mstart here:[0m components/Map.tsx · [2mhand-written 300d ago · 1 human in its[0m
+    [2mhistory[0m
+
+  [1m9[0m of [1m12[0m files — [1m70%[0m of the code — have exactly one human in their history:
+  when that person stops committing, nothing keeps the file lit.
+
+  to see who they are: [38;5;200;1mfathohm team[0m
+
+  [38;5;200mWHERE THE DARK CODE IS[0m[2m  ·  bar length = share of this repository[0m
+  [38;5;196m█[0m = gone dark     [38;5;33m░[0m = a human wrote or prompted it recently
+  app/                     [38;5;196m██[0m[38;5;33m░░░░░░░[0m                            26% · 17% dark
+  components/              [38;5;196m████████[0m[38;5;33m░[0m                            25% · 92% dark
+  workers/                 [38;5;33m░░░░░░░░[0m                             21% · 0% dark
+  lib/                     [38;5;196m██████[0m[38;5;33m░[0m                              20% · 82% dark
+  cli/                     [38;5;33m░░[0m                                    6% · 0% dark
+  ./                       [38;5;196m█[0m                                    <1% · 100% dark
+
+  [38;5;200mGONE DARK (nobody wrote or prompted it in 180d)[0m
+[2m  application code first · config, sql, scripts · then tests & styles[0m
+
+[38;5;196m  HAND-WRITTEN, BUT 220+ DAYS AGO — 45% OF THE CODE[0m
+  components/Map.tsx  [2mhand-written 300d ago · 1 human in its history[0m
+  lib/map-tree.ts     [2mhand-written 220d ago · 2 humans in its history[0m
+  lib/palette.ts      [2mhand-written 220d ago · 2 humans in its history[0m
+  app/layout.tsx      [2mhand-written 400d ago · 1 human in its history[0m
+  package.json        [2mhand-written 400d ago · 1 human in its history[0m
+
+[38;5;33m  still lit — 55% of the code · a human wrote or prompted it inside the last[0m
+[38;5;33m  180 days (7 files)[0m
+
+  factor by factor: [38;5;200;1mfathohm explain[0m components/Map.tsx
+
+  authorship is declared, not detected: undeclared agent work reads as human.
+
+  ────────────────────────────────────────
+  [38;5;200mCOMPREHENSION DEBT[0m[2m — git alone cannot measure it[0m
+  Comprehension debt: code no human has recently written, reviewed, or
+  explained — measured from the record, not a survey.
+    [38;5;167m72%[0m  if no pull request here was ever reviewed in depth — git records no
+         reviews, so this is the record as it stands
+    [38;5;69m24%[0m  if every pull request was reviewed in depth
+  git cannot say which. That is the gap, not a margin of error.
+
+  [38;5;200mTREND[0m[2m — today's files, re-scored as of each date[0m
+    12 months ago [38;5;68m      35%[0m
+    today         [38;5;69m24%[0m – [38;5;167m72%[0m
+    in 90 days    [38;5;68m35%[0m – [38;5;203m86%[0m   with no new commits
+  next file to cross into debt: app/api/route.ts (2026-08-05)
+
+  git does not record PR reviews. The GitHub App reads them and settles which
+  reading is right — [38;5;200;1mhttps://fathohm.dev[0m
+
+[2m  no telemetry, no network: this reading used only your local git history.[0m
+[2m  Verify by running it offline.[0m

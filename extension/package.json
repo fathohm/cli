@@ -1,0 +1,53 @@
+{
+  "name": "fathohm-vscode",
+  "displayName": "Fathohm",
+  "description": "How much of your code has gone dark — no human wrote or prompted any of it in the last 180 days? A git-only reading in your status bar: metadata only, never file contents, no network.",
+  "version": "0.1.0",
+  "publisher": "fathohm",
+  "license": "MIT",
+  "homepage": "https://fathohm.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fathohm/cli"
+  },
+  "bugs": {
+    "url": "https://fathohm.dev/support",
+    "email": "hello@fathohm.dev"
+  },
+  "qna": "https://fathohm.dev/support",
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#0d0d0d",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "comprehension debt",
+    "code review",
+    "technical debt",
+    "bus factor",
+    "git"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "fathohm.explainFile",
+        "title": "Fathohm: Explain This File"
+      },
+      {
+        "command": "fathohm.openMap",
+        "title": "Fathohm: Open the hosted Map"
+      }
+    ]
+  }
+}

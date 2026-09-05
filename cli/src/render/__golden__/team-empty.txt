@@ -1,0 +1,7 @@
+FATHOHM -- git-only reading of fresh-repo . the humans (0 in its history)
+2026-07-31T00:00:00Z . scorer v4
+
+  nothing to fathom here yet
+  This repository has no commits, so there is no history to read.
+
+  authorship is declared, not detected: undeclared agent work reads as human.

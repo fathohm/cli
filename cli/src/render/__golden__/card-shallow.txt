@@ -1,0 +1,71 @@
+FATHOHM -- git-only reading of acme-api (12 code files)
+2026-07-31T00:00:00Z . scorer v4
+
+  #  #  ####  ##   ##
+  #  #  #     ##  ##
+  ####  ####     ##    GONE DARK
+     #     #    ## ##
+     #  ####   ##  ##
+
+  45% of this code has gone dark: no human has written or prompted any of it
+  in the last 180 days. Exact over the commits this reading saw, which are not
+  all of them -- see the note below.
+
+  start here: components/Map.tsx . hand-written 300d ago . 1 human in its
+    history
+
+  9 of 12 files -- 70% of the code -- have exactly one human in their history:
+  when that person stops committing, nothing keeps the file lit.
+
+  to see who they are: fathohm team
+
+  WHERE THE DARK CODE IS  .  bar length = share of this repository
+  # = gone dark     . = a human wrote or prompted it recently
+  app/                     ##.......                            26% . 17% dark
+  components/              ########.                            25% . 92% dark
+  workers/                 ........                             21% . 0% dark
+  lib/                     ######.                              20% . 82% dark
+  cli/                     ..                                    6% . 0% dark
+  ./                       #                                    <1% . 100% dark
+
+  GONE DARK (nobody wrote or prompted it in 180d)
+  application code first . config, sql, scripts . then tests & styles
+
+  HAND-WRITTEN, BUT 220+ DAYS AGO -- 45% OF THE CODE
+  components/Map.tsx  hand-written 300d ago . 1 human in its history
+  lib/map-tree.ts     hand-written 220d ago . 2 humans in its history
+  lib/palette.ts      hand-written 220d ago . 2 humans in its history
+  app/layout.tsx      hand-written 400d ago . 1 human in its history
+  package.json        hand-written 400d ago . 1 human in its history
+
+  still lit -- 55% of the code . a human wrote or prompted it inside the last
+  180 days (7 files)
+
+  factor by factor: fathohm explain components/Map.tsx
+
+  PARTIAL READING
+  this clone is shallow: the commits behind the cut were never fetched, so
+  everything above describes the fragment git can see, not the repository.
+  Re-run in a full clone before quoting it.
+  authorship is declared, not detected: undeclared agent work reads as human.
+
+  ----------------------------------------
+  COMPREHENSION DEBT -- git alone cannot measure it
+  Comprehension debt: code no human has recently written, reviewed, or
+  explained -- measured from the record, not a survey.
+    72%  if no pull request here was ever reviewed in depth -- git records no
+         reviews, so this is the record as it stands
+    24%  if every pull request was reviewed in depth
+  git cannot say which. That is the gap, not a margin of error.
+
+  TREND -- today's files, re-scored as of each date
+    12 months ago       35%
+    today         24% - 72%
+    in 90 days    35% - 86%   with no new commits
+  next file to cross into debt: app/api/route.ts (2026-08-05)
+
+  git does not record PR reviews. The GitHub App reads them and settles which
+  reading is right -- https://fathohm.dev
+
+  no telemetry, no network: this reading used only your local git history.
+  Verify by running it offline.

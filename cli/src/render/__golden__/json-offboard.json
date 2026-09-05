@@ -1,0 +1,100 @@
+{
+  "fathohm": {
+    "cliVersion": "1.6.0",
+    "scorerVersion": "v4"
+  },
+  "command": "offboard",
+  "now": "2026-07-31T00:00:00.000Z",
+  "target": "acme-api",
+  "provenance": {
+    "shallow": false,
+    "grafted": false,
+    "emptyRepo": false,
+    "squashOnly": false,
+    "sinceBound": null,
+    "atRef": null,
+    "submodulesSkipped": 0,
+    "excluded": {
+      "patterns": [],
+      "fileCount": 0,
+      "bytes": 0
+    },
+    "agentShareIsLowerBound": true
+  },
+  "headline": {
+    "dark": 43.425076452599384,
+    "floor": 43.425076452599384,
+    "ceiling": 9.021406727828746,
+    "fileCount": 12,
+    "scoredBytes": 130800,
+    "darkBytes": 56800,
+    "floorBlindBytes": 56800,
+    "ceilingBlindBytes": 11800,
+    "display": {
+      "dark": "43%",
+      "floor": "43%",
+      "ceiling": "9%"
+    }
+  },
+  "authorshipSignatures": {
+    "claude_code": 56000,
+    "copilot": 0,
+    "cursor": 0,
+    "unsigned": 0,
+    "note": "signature vocabulary is three patterns; unsigned means no recognised trailer, not human"
+  },
+  "offboard": {
+    "matched": true,
+    "before": {
+      "floorBlindShare": 43.425076452599384,
+      "ceilingBlindShare": 9.021406727828746
+    },
+    "after": {
+      "floorBlindShare": 85.47400611620795,
+      "ceilingBlindShare": 51.07033639143731
+    },
+    "soleKeeper": {
+      "files": 3,
+      "bytes": 33000,
+      "share": 25.229357798165136
+    },
+    "crossings": [
+      {
+        "path": "lib/billing/invoice.ts",
+        "before": 0.3302469135802469,
+        "after": 0,
+        "clause": "only human in its history"
+      },
+      {
+        "path": "lib/billing/proration.ts",
+        "before": 0.3285108024691358,
+        "after": 0,
+        "clause": "only human in its history"
+      },
+      {
+        "path": "app/api/webhooks/route.ts",
+        "before": 0.4135802469135802,
+        "after": 0.08333333333333333,
+        "clause": "newest human commit falls to 200d ago"
+      },
+      {
+        "path": "lib/tax/rates.ts",
+        "before": 0.3395061728395061,
+        "after": 0.2561728395061728,
+        "clause": "1 of 2 humans in its history"
+      },
+      {
+        "path": "app/jobs/retry.ts",
+        "before": 0.3233024691358024,
+        "after": 0.2399691358024691,
+        "clause": "1 of 2 humans in its history"
+      },
+      {
+        "path": "lib/billing/tax-id.ts",
+        "before": 0.32959876543209876,
+        "after": 0,
+        "clause": "only human in its history"
+      }
+    ]
+  }
+}

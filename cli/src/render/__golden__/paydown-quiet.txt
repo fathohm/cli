@@ -1,0 +1,8 @@
+FATHOHM -- git-only reading of acme-api . the paydown ladder
+2026-07-31T00:00:00Z . scorer v4
+git records no reviews -- every rung below is this reading re-scored as if one
+existed
+
+  72% comprehension debt -> 49% (1 review) -> 20% (3) -> 7% (5) -> 0% (8)
+
+  authorship is declared, not detected: undeclared agent work reads as human.

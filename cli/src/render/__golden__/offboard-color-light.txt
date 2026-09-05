@@ -1,0 +1,47 @@
+[38;5;163;1mFATHOHM[0m — git-only reading of acme-api without priya (simulated)
+[2m2026-07-31T00:00:00Z · scorer v4[0m
+[2mtheir commits stay in git's record — the simulation removes their engagement[0m
+[2mfrom every factor[0m
+
+  [38;5;124m████  ████  ██   ██[0m
+  [38;5;124m█  █  █     ██  ██[0m
+  [38;5;124m████  ████     ██  [0m  comprehension debt without priya
+  [38;5;124m█  █     █    ██ ██[0m
+  [38;5;124m████  ████   ██  ██[0m
+
+  85% of this code would sit below the comprehension line the day priya leaves
+  — up from 43% today (worst case, git evidence alone)
+  best case 51%, up from 9%: full review credit for every file that went
+  through a PR — both recomputed through the same scorer, not estimated
+[2m  the comprehension line: below it, no human has recently written, reviewed,[0m
+[2m  or explained it[0m
+
+[2m  Comprehension debt: code no human has recently written, reviewed, or[0m
+[2m  explained — measured from the record, not a survey.[0m
+
+  3 files — 32K, 25% of the scored code — have priya as the only human in
+  their history
+
+  [38;5;163mHANDOVER[0m[2m  ·  crosses the line without priya, application code first[0m
+  [38;5;88m0.33[0m → [38;5;160m0.00[0m  lib/billing/invoice.ts     [2monly human in its history[0m
+  [38;5;88m0.33[0m → [38;5;160m0.00[0m  lib/billing/proration.ts   [2monly human in its history[0m
+  [38;5;52m0.41[0m → [38;5;160m0.08[0m  app/api/webhooks/route.ts  [2mnewest human commit falls to 200d ago[0m
+  [38;5;52m0.34[0m → [38;5;88m0.26[0m  lib/tax/rates.ts           [2m1 of 2 humans in its history[0m
+  [38;5;88m0.32[0m → [38;5;88m0.24[0m  app/jobs/retry.ts          [2m1 of 2 humans in its history[0m
+
+  1 more cross with them gone: [38;5;163;1mfathohm offboard priya --full[0m
+  removing a person never raises a file's score — everything below the line
+  today stays below
+
+  factor by factor, after they leave: fathohm explain lib/billing/invoice.ts
+  --without priya
+
+  authorship is declared, not detected: undeclared agent work reads as human.
+
+  ────────────────────────────────────────
+  git does not record PR reviews. The GitHub App reads them — who reviewed
+  priya's files is evidence this simulation cannot see.
+  install the GitHub App → [38;5;163;1mhttps://fathohm.dev[0m
+
+[2m  no telemetry, no network: this reading used only your local git history.[0m
+[2m  Verify by running it offline.[0m

@@ -1,0 +1,60 @@
+{
+  "fathohm": {
+    "cliVersion": "1.6.0",
+    "scorerVersion": "v4"
+  },
+  "command": "check",
+  "now": "2026-07-31T00:00:00.000Z",
+  "target": "acme-api",
+  "provenance": {
+    "shallow": false,
+    "grafted": false,
+    "emptyRepo": false,
+    "squashOnly": false,
+    "sinceBound": null,
+    "atRef": null,
+    "submodulesSkipped": 0,
+    "excluded": {
+      "patterns": [],
+      "fileCount": 0,
+      "bytes": 0
+    },
+    "agentShareIsLowerBound": true
+  },
+  "headline": {
+    "dark": 45.46424759871932,
+    "floor": 72.14514407684098,
+    "ceiling": 23.90608324439701,
+    "fileCount": 12,
+    "scoredBytes": 93700,
+    "darkBytes": 42600,
+    "floorBlindBytes": 67600,
+    "ceilingBlindBytes": 22400,
+    "display": {
+      "dark": "45%",
+      "floor": "72%",
+      "ceiling": "24%"
+    }
+  },
+  "authorshipSignatures": {
+    "claude_code": 25000,
+    "copilot": 0,
+    "cursor": 0,
+    "unsigned": 0,
+    "note": "signature vocabulary is three patterns; unsigned means no recognised trailer, not human"
+  },
+  "verdict": {
+    "bound": "ceiling",
+    "threshold": 40,
+    "share": 23.90608324439701,
+    "blindBytes": 22400,
+    "scoredBytes": 93700,
+    "passed": true,
+    "indeterminate": false,
+    "nothingToGate": false,
+    "display": {
+      "share": "24%",
+      "threshold": "40%"
+    }
+  }
+}
