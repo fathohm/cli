@@ -1,0 +1,33 @@
+name: publish
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The CLI's own tests read git history.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build
+      - name: The tag is the version the binary prints
+        run: node cli/dist/fathohm.cjs --version | grep -F "fathohm ${GITHUB_REF_NAME#v} "
+      # Explicit, so a trusted publisher that is not configured fails the job
+      # instead of shipping an unattested tarball.
+      - run: npm publish --provenance --access public
+        working-directory: cli

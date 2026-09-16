@@ -1,6 +1,6 @@
 {
   "fathohm": {
-    "cliVersion": "1.6.0",
+    "cliVersion": "1.6.1",
     "scorerVersion": "v4"
   },
   "command": "paydown",

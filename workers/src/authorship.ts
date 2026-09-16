@@ -13,10 +13,26 @@ export interface AuthorshipResult {
   agentSignature: AgentSignature;
 }
 
-const AGENT_SIGNATURES: Array<{ pattern: RegExp; signature: Exclude<AgentSignature, null> }> = [
-  { pattern: /claude|anthropic/i, signature: "claude_code" },
-  { pattern: /copilot/i, signature: "copilot" },
-  { pattern: /cursor/i, signature: "cursor" },
+// Anchored to the identities the tools actually write, matched against the name
+// and the email SEPARATELY. The old substring match (`/claude|anthropic/` over
+// "name email") labelled a human called Claude Dupont — or anyone at
+// precursor@… — as an agent, and their code went dark.
+const AGENT_SIGNATURES: Array<{ name: RegExp; email: RegExp; signature: Exclude<AgentSignature, null> }> = [
+  {
+    name: /^claude(\[bot\])?$/i,
+    email: /^noreply@anthropic\.com$|^\d+\+claude(\[bot\])?@users\.noreply\.github\.com$/i,
+    signature: "claude_code",
+  },
+  {
+    name: /^(github )?copilot(-swe-agent)?(\[bot\])?$/i,
+    email: /^copilot@github\.com$|^\d+\+copilot(-swe-agent)?(\[bot\])?@users\.noreply\.github\.com$/i,
+    signature: "copilot",
+  },
+  {
+    name: /^cursor( ?agent)?(\[bot\])?$/i,
+    email: /^(cursor)?agent@cursor\.(com|sh)$/i,
+    signature: "cursor",
+  },
 ];
 
 // Committer identities that look automated but match no known agent
@@ -45,11 +61,19 @@ export function extractCoAuthors(message: string): string[] {
   return [...message.matchAll(/^Co-authored-by:\s*(.+)$/gim)].map((m) => m[1].trim());
 }
 
-function matchSignature(text: string): AgentSignature {
-  for (const { pattern, signature } of AGENT_SIGNATURES) {
-    if (pattern.test(text)) return signature;
+function matchIdentity(name: string, email: string): AgentSignature {
+  for (const signature of AGENT_SIGNATURES) {
+    if (signature.name.test(name.trim()) || signature.email.test(email.trim())) {
+      return signature.signature;
+    }
   }
   return null;
+}
+
+/** A `Co-authored-by:` value — `Name <email>` — split into its two halves. */
+function matchTrailer(trailer: string): AgentSignature {
+  const parts = /^(.*?)\s*<([^>]*)>\s*$/.exec(trailer);
+  return parts === null ? matchIdentity(trailer, "") : matchIdentity(parts[1], parts[2]);
 }
 
 function looksAmbiguous(text: string): boolean {
@@ -76,8 +100,8 @@ function looksAmbiguous(text: string): boolean {
  */
 export function detectAuthorship(input: AuthorshipInput): AuthorshipResult {
   const authorText = `${input.authorName} ${input.authorEmail}`;
-  const authorSignature = matchSignature(authorText);
-  const coAuthorSignatures = input.coAuthors.map(matchSignature);
+  const authorSignature = matchIdentity(input.authorName, input.authorEmail);
+  const coAuthorSignatures = input.coAuthors.map(matchTrailer);
   const agentSignature = authorSignature ?? coAuthorSignatures.find((s) => s !== null) ?? null;
 
   if (agentSignature) {

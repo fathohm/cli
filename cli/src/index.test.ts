@@ -44,12 +44,12 @@ describe("--version", () => {
   it("prints the pinned string and nothing else", async () => {
     const result = await run(["--version"]);
     expect(result.code).toBe(EXIT.ok);
-    expect(result.stdout).toBe("fathohm 1.6.0 (scorer v4)\n");
+    expect(result.stdout).toBe("fathohm 1.6.1 (scorer v4)\n");
     expect(result.stderr).toBe("");
   });
 
   it("prints the same string from the short alias", async () => {
-    expect((await run(["-V"])).stdout).toBe("fathohm 1.6.0 (scorer v4)\n");
+    expect((await run(["-V"])).stdout).toBe("fathohm 1.6.1 (scorer v4)\n");
   });
 });
 
@@ -190,6 +190,42 @@ describe("a reading, end to end", () => {
     expect(missing.code).toBe(EXIT.usage);
     expect(missing.stdout).toBe("");
     expect(missing.stderr).toContain("did you mean `src/parse.ts`?");
+  });
+
+  it("explains a path relative to where the caller is standing", async () => {
+    const repo = createFixtureRepo({ prefix: "explain-cwd" });
+    repo.commit({
+      message: "two files, one name",
+      date: "2026-07-01T00:00:00Z",
+      files: { "a.ts": "export const root = 1;\n", "sub/a.ts": "export const sub = 2;\n" },
+    });
+    const fromSub = await run(["explain", "a.ts", "--now", NOW, "--no-color", "--ascii"], {
+      cwd: path.join(repo.dir, "sub"),
+      env: { COLUMNS: "80" },
+    });
+    expect(fromSub.code).toBe(EXIT.ok);
+    expect(fromSub.stdout).toContain("sub/a.ts");
+  });
+
+  it("prints a filename's control bytes visibly, never raw", async () => {
+    // A repository can name a file with a terminal escape in it; printed raw it
+    // could recolour, move the cursor, or erase the PARTIAL READING banner.
+    const repo = createFixtureRepo({ prefix: "escape" });
+    repo.commit({
+      message: "hostile name",
+      date: "2025-01-01T00:00:00Z",
+      files: { "src/a[2Jb.ts": "export const a = 1;\n" },
+    });
+    const text = await run(["read", "--now", NOW, "--no-color", "--ascii", "--full"], {
+      cwd: repo.dir,
+      env: { COLUMNS: "80" },
+    });
+    expect(text.code).toBe(EXIT.ok);
+    expect(text.stdout).not.toContain("");
+    expect(text.stdout).toContain("a\\x1b[2Jb.ts");
+
+    const json = await run(["read", "--now", NOW, "--json"], { cwd: repo.dir });
+    expect(json.stdout).toContain("a\\u001b[2Jb.ts");
   });
 
   it("explains a row of GONE DARK by its number", async () => {

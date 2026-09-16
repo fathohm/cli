@@ -11,6 +11,12 @@ fathohm 59% dark   this file · dark, last touched 8 months ago
 Two items and two commands. Nothing in the gutter, nothing in the Problems
 panel, nothing about any person.
 
+**Install:** search "Fathohm" in the Extensions panel, or
+
+```
+code --install-extension fathohm.fathohm-vscode
+```
+
 Comprehension debt: code no human has recently written, reviewed, or explained
 — measured from the record, not a survey. The status bar shows the half of that
 a git history settles by itself: who wrote it, and when.
@@ -137,9 +143,8 @@ npm test                    # the pure helpers, the display floors, the refusals
 `npx fathohm` prints the whole card — what has gone dark and why, where it is,
 the five files to start with, the twelve-month comprehension-debt trend, and
 both readings of the debt itself. See the CLI's own page on
-[npm](https://www.npmjs.com/package/fathohm) — the repository is private, so a
-link into it would 404 for you; the npm page renders the same README and the
-tarball it serves is unminified source.
+[npm](https://www.npmjs.com/package/fathohm), and the source of both the CLI
+and this extension at [github.com/fathohm/cli](https://github.com/fathohm/cli).
 
 <!-- This paragraph used to end "…and what a recorded review would actually
 move", describing the card's leverage line. That line was deleted at 1.5.0: the

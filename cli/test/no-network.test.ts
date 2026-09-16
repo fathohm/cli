@@ -271,7 +271,6 @@ describe("E. the bundle's filesystem calls are exactly the documented ones", () 
       // Sizes and presence. Never contents.
       statSync: 2,
       existsSync: 1,
-      readdirSync: 1,
     });
   });
 

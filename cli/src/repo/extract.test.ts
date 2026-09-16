@@ -626,6 +626,26 @@ describe("extractRepo", () => {
     expect((await readingOf(repo)).provenance.grafted).toBe(true);
   });
 
+  it("still notices a replacement once `git gc` has packed it", async () => {
+    const repo = createFixtureRepo({ prefix: "replace" });
+    repo.commit({ message: "one", date: "2026-01-01T00:00:00+00:00", files: { "a.ts": "1\n" } });
+    repo.commit({ message: "two", date: "2026-01-02T00:00:00+00:00", files: { "a.ts": "2\n" } });
+    repo.git(["replace", "-f", "HEAD~1", "HEAD"]);
+    repo.git(["pack-refs", "--all"]);
+    expect((await readingOf(repo)).provenance.grafted).toBe(true);
+  });
+
+  it("notices the repository's grafts from a linked worktree", async () => {
+    const repo = createFixtureRepo({ prefix: "graft-wt" });
+    repo.commit({ message: "root", date: "2026-01-01T00:00:00+00:00", files: { "a.ts": "1\n" } });
+    const worktree = path.join(mkdtempSync(path.join(os.tmpdir(), "fathohm-wt-")), "wt");
+    repo.git(["worktree", "add", "--quiet", worktree]);
+    mkdirSync(path.join(repo.dir, ".git", "info"), { recursive: true });
+    writeFileSync(path.join(repo.dir, ".git", "info", "grafts"), "");
+    const reading = await extractRepo(worktree, { sink: () => commitCollector() });
+    expect(reading.provenance.grafted).toBe(true);
+  });
+
   it("skips a submodule gitlink and counts it", async () => {
     const inner = createFixtureRepo({ prefix: "inner" });
     inner.commit({

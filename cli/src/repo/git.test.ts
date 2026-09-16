@@ -48,6 +48,40 @@ describe("runGit", () => {
     const out = await runGit(repo.dir, ["log", "-1", "--pretty=format:%an"]);
     expect(out.toString("utf8")).toBe("Ada Lovelace");
   });
+
+  it("reads the directory it was given even when a git hook exported GIT_DIR", async () => {
+    const target = repoWithOneCommit();
+    const hookRepo = createFixtureRepo({ prefix: "git-hook" });
+    hookRepo.commit({
+      message: "other",
+      date: "2026-02-01T00:00:00+00:00",
+      files: { "b.ts": "export const b = 2;\n" },
+    });
+    // Read before GIT_DIR is set: the fixture helper's own git inherits it.
+    const expected = target.head();
+    const original = process.env.GIT_DIR;
+    process.env.GIT_DIR = path.join(hookRepo.dir, ".git");
+    try {
+      const out = await runGit(target.dir, ["rev-parse", "HEAD"]);
+      expect(out.toString("utf8").trim()).toBe(expected);
+    } finally {
+      if (original === undefined) delete process.env.GIT_DIR;
+      else process.env.GIT_DIR = original;
+    }
+  });
+
+  it("does not hand the machine's secrets to git", async () => {
+    const repo = repoWithOneCommit();
+    process.env.FATHOHM_TEST_SECRET = "sk-should-not-leak";
+    try {
+      const out = await runGit(repo.dir, ["-c", "alias.dumpenv=!env", "dumpenv"]);
+      const env = out.toString("utf8");
+      expect(env).toContain("PATH=");
+      expect(env).not.toContain("sk-should-not-leak");
+    } finally {
+      delete process.env.FATHOHM_TEST_SECRET;
+    }
+  });
 });
 
 describe("failures name the command, the expectation, and one next step", () => {
@@ -142,10 +176,28 @@ describe("failures name the command, the expectation, and one next step", () => 
     if (!isCliError(failure)) return;
     expect(failure.exitCode).toBe(EXIT.cannotRead);
     expect(failure.message).toContain(absent);
-    expect(failure.message).toContain("is not there");
+    expect(failure.message).toContain("is not one");
     // The whole point: a working git must not be accused.
     expect(failure.message).not.toContain("no `git` on PATH");
     expect(failure.hint).not.toContain("install git");
+  });
+});
+
+describe("a cwd that is a file", () => {
+  // Node throws ENOTDIR synchronously, outside the callback every other spawn
+  // failure arrives through — it used to print "internal failure", exit 4.
+  it("is the directory's fault, exit 3, for both runners", async () => {
+    const repo = repoWithOneCommit();
+    const file = path.join(repo.dir, "src", "a.ts");
+    for (const failure of [
+      await runGit(file, ["rev-parse", "HEAD"]).catch((error: unknown) => error),
+      await streamGit(file, ["log"], { onStdout: () => {} }).catch((error: unknown) => error),
+    ]) {
+      expect(isCliError(failure)).toBe(true);
+      if (!isCliError(failure)) return;
+      expect(failure.exitCode).toBe(EXIT.cannotRead);
+      expect(failure.message).toContain("is not one");
+    }
   });
 });
 

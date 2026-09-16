@@ -10,7 +10,7 @@ describe("versionLine", () => {
   // only attributable if the lens is stated. Changing either half of this
   // string is a deliberate release act, not a refactor.
   it("prints the CLI version and the scorer version", () => {
-    expect(versionLine()).toBe("fathohm 1.6.0 (scorer v4)");
+    expect(versionLine()).toBe("fathohm 1.6.1 (scorer v4)");
   });
 
   it("is composed from the two exported versions, not written out by hand", () => {

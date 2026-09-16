@@ -187,7 +187,7 @@ async function runCommand(
   // discovers. So the sink is a factory: `extractRepo` calls it once, after the
   // root is known and before the first commit, and gets back the consumer.
   let loaded: ReturnType<typeof loadConfig> | null = null;
-  const extract = await extractRepo<CliEvent>(repoDir, {
+  const raw = await extractRepo<CliEvent>(repoDir, {
     atRef: flags.at,
     since: flags.since,
     sink: (root) => {
@@ -201,6 +201,9 @@ async function runCommand(
   // Warnings go to stderr, always — stdout carries the reading, and a `--json`
   // consumer must never have to parse around a note about a typo'd key.
   for (const warning of warnings) io.stderr(`warning: ${warning}\n`);
+  // A filename can carry a terminal escape. Everything below renders from
+  // `extract`, so this is the one place it is made printable; JSON escapes its own.
+  const extract = flags.json ? raw : printableExtract(raw);
 
   const now = resolveNow(flags, extract, wallClock);
   // The flag beats the file, everywhere. A config is a team's default; a flag
@@ -243,7 +246,7 @@ async function runCommand(
   const document = { reading, meta };
 
   if (invocation.command === "explain") {
-    const file = selectFile(reading, invocation.target);
+    const file = selectFromCwd(reading, io.cwd, raw.root, invocation.target);
     return flags.json
       ? emitJson(io, explainDocument(document, file))
       : emit(io, renderExplain(reading, file, term, meta));
@@ -425,6 +428,51 @@ function resolveNow(flags: CliFlags, extract: RepoExtract<CliEvent>, wallClock: 
     if (clock !== null) return clock;
   }
   return wallClock;
+}
+
+/** `explain <path>` relative to where the caller stands, then `selectFile`'s ladder. */
+function selectFromCwd(reading: RepoReading, cwd: string, root: string, target: string) {
+  const rel = path.relative(root, path.resolve(cwd, target)).split(path.sep).join("/");
+  if (rel !== "" && !rel.startsWith("..") && !path.isAbsolute(rel)) {
+    const hit = reading.files.find((file) => file.path === rel);
+    if (hit !== undefined) return hit;
+  }
+  return selectFile(reading, target);
+}
+
+// C0, DEL and C1: the bytes a terminal acts on instead of printing.
+// eslint-disable-next-line no-control-regex
+const CONTROL = /[ --]/;
+// eslint-disable-next-line no-control-regex
+const CONTROL_ALL = /[ --]/g;
+
+/** Visible and near-injective (`\x1b`), so two paths never merge into one row. */
+function printable(text: string): string {
+  return CONTROL.test(text)
+    ? text.replace(CONTROL_ALL, (c) => `\\x${c.charCodeAt(0).toString(16).padStart(2, "0")}`)
+    : text;
+}
+
+/** Copies only what needs it: the common repository allocates two arrays. */
+function printableExtract(extract: RepoExtract<CliEvent>): RepoExtract<CliEvent> {
+  return {
+    ...extract,
+    root: printable(extract.root),
+    history: extract.history.map((event) =>
+      CONTROL.test(event.actorId + event.actorName + event.actorEmail + event.paths.join(""))
+        ? {
+            ...event,
+            actorId: printable(event.actorId),
+            actorName: printable(event.actorName),
+            actorEmail: printable(event.actorEmail),
+            paths: event.paths.map(printable),
+          }
+        : event,
+    ),
+    tree: extract.tree.map((entry) =>
+      CONTROL.test(entry.path) ? { ...entry, path: printable(entry.path) } : entry,
+    ),
+  };
 }
 
 /** One write, one trailing newline. Renderers never touch the stream. */

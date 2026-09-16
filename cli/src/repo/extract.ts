@@ -1,4 +1,4 @@
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync } from "node:fs";
 import path from "node:path";
 
 import * as z from "zod/mini";
@@ -504,6 +504,7 @@ export async function extractRepo<E = never>(
     "--is-shallow-repository",
     "--is-bare-repository",
     "--git-dir",
+    "--git-common-dir",
     "--show-cdup",
     "--verify",
     "--quiet",
@@ -516,16 +517,17 @@ export async function extractRepo<E = never>(
     throw notAReadableRepo(cwd, probeArgs, probe.code, probe.stderr);
   }
   const probeLines = probeOutput(probe.stdout.toString("utf8"));
-  // Three lines are what EVERY repository owes: shallow, bare, git dir. Fewer
-  // than that and git did not answer the question it was asked.
-  if (probeLines.length < 3) {
+  // Four lines are what EVERY repository owes: shallow, bare, git dir, common
+  // dir. Fewer than that and git did not answer the question it was asked.
+  if (probeLines.length < 4) {
     throw notAReadableRepo(cwd, probeArgs, probe.code, probe.stderr);
   }
 
   const shallow = probeLines[0] === "true";
   const bare = probeLines[1] === "true";
-  const gitDir = path.resolve(cwd, probeLines[2]);
-  const grafted = detectGrafts(gitDir);
+  // The common dir: a linked worktree's own git dir has no `info/grafts`.
+  const commonDir = path.resolve(cwd, probeLines[3]);
+  const grafted = await detectGrafts(cwd, commonDir);
   // The ref line comes LAST — `--verify` holds its answer back until every
   // other flag has printed — so its absence is read from the exit status
   // rather than from a line count. Status 1 is `--quiet`'s way of saying the
@@ -549,10 +551,10 @@ export async function extractRepo<E = never>(
   // the reader typed, and it is where a `.fathohm.toml` beside a bare clone
   // would sit. Non-bare, git ALWAYS emits the line even when it is empty, so a
   // missing one there is a probe that did not answer.
-  if (!bare && probeLines.length < 4) {
+  if (!bare && probeLines.length < 5) {
     throw notAReadableRepo(cwd, probeArgs, probe.code, probe.stderr);
   }
-  const root = bare ? path.resolve(cwd) : path.resolve(cwd, probeLines[3]);
+  const root = bare ? path.resolve(cwd) : path.resolve(cwd, probeLines[4]);
 
   // The root is known and nothing has been walked yet: the one moment where a
   // caller can read `.fathohm.toml` and build a consumer that depends on it.
@@ -729,14 +731,16 @@ async function readTree(cwd: string, ref: string): Promise<TreeReading> {
  * walked is not the history that happened. Detection is by *existence* only —
  * fathohm does not read these files, it just notes that the repo has them.
  */
-function detectGrafts(gitDir: string): boolean {
-  if (existsSync(path.join(gitDir, "info", "grafts"))) return true;
-  const replaceDir = path.join(gitDir, "refs", "replace");
-  try {
-    return readdirSync(replaceDir).length > 0;
-  } catch {
-    return false;
-  }
+async function detectGrafts(cwd: string, commonDir: string): Promise<boolean> {
+  if (existsSync(path.join(commonDir, "info", "grafts"))) return true;
+  // Asked of git, not listed: `git gc` packs `refs/replace/` into `packed-refs`.
+  const replace = await runGitOutcome(cwd, [
+    "for-each-ref",
+    "--count=1",
+    "--format=%(refname)",
+    "refs/replace/",
+  ]);
+  return replace.code === 0 && replace.stdout.length > 0;
 }
 
 function notAReadableRepo(

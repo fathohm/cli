@@ -45,6 +45,40 @@ const HERMETIC_CONFIG: readonly string[] = [
 ];
 
 /**
+ * The variables git may inherit, and nothing else. The whole environment used
+ * to pass through: a hook's `GIT_DIR` made fathohm read the HOOK's repo under
+ * the target's name, and every API key on the machine rode along to git.
+ */
+const INHERITED_ENV: readonly string[] = [
+  "PATH",
+  "HOME",
+  "XDG_CONFIG_HOME",
+  "GIT_EXEC_PATH",
+  "GIT_CONFIG_GLOBAL",
+  "GIT_CONFIG_SYSTEM",
+  "GIT_CONFIG_NOSYSTEM",
+  "TZ",
+  "TMPDIR",
+  "TEMP",
+  "TMP",
+  "USERPROFILE",
+  "HOMEDRIVE",
+  "HOMEPATH",
+  "APPDATA",
+  "LOCALAPPDATA",
+  "SYSTEMROOT",
+  "SYSTEMDRIVE",
+  "WINDIR",
+  "COMSPEC",
+  "PATHEXT",
+  "PROGRAMDATA",
+];
+
+/** `GIT_CONFIG_COUNT` + `GIT_CONFIG_KEY_<n>`/`GIT_CONFIG_VALUE_<n>`: how CI
+ *  runners hand git a `safe.directory` without touching a config file. */
+const INHERITED_ENV_PATTERN = /^GIT_CONFIG_(COUNT|KEY_\d+|VALUE_\d+)$/;
+
+/**
  * The environment every spawn gets. `LC_ALL=C` keeps git's *diagnostics*
  * predictable (fathohm never parses them, but it does quote them back at the
  * user); `GIT_OPTIONAL_LOCKS=0` keeps a read from touching the index; the two
@@ -52,13 +86,19 @@ const HERMETIC_CONFIG: readonly string[] = [
  * pager.
  */
 function gitEnv(): NodeJS.ProcessEnv {
-  return {
-    ...process.env,
-    LC_ALL: "C",
-    GIT_OPTIONAL_LOCKS: "0",
-    GIT_PAGER: "cat",
-    GIT_TERMINAL_PROMPT: "0",
-  };
+  const env: Record<string, string> = {};
+  for (const name of INHERITED_ENV) {
+    const value = process.env[name];
+    if (value !== undefined) env[name] = value;
+  }
+  for (const [name, value] of Object.entries(process.env)) {
+    if (INHERITED_ENV_PATTERN.test(name) && value !== undefined) env[name] = value;
+  }
+  env.LC_ALL = "C";
+  env.GIT_OPTIONAL_LOCKS = "0";
+  env.GIT_PAGER = "cat";
+  env.GIT_TERMINAL_PROMPT = "0";
+  return env as NodeJS.ProcessEnv;
 }
 
 /**
@@ -100,6 +140,8 @@ export function runGitOutcome(
 ): Promise<GitOutcome> {
   const maxBuffer = options.maxBuffer ?? GIT_MAX_BUFFER;
   return new Promise((resolve, reject) => {
+    // ENOTDIR (a cwd that is a file) throws synchronously.
+    try {
     execFile(
       "git",
       [...HERMETIC_CONFIG, ...args],
@@ -125,6 +167,9 @@ export function runGitOutcome(
         reject(spawnCrashed(cwd, args, error, options));
       },
     );
+    } catch {
+      reject(spawnFailed(cwd, args));
+    }
   });
 }
 
@@ -162,12 +207,22 @@ export function streamGit(
   options: StreamGitOptions,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    const child = spawn("git", [...HERMETIC_CONFIG, ...args], {
-      cwd,
-      env: gitEnv(),
-      stdio: ["ignore", "pipe", "pipe"],
-      windowsHide: true,
-    });
+    const child = (() => {
+      try {
+        return spawn("git", [...HERMETIC_CONFIG, ...args], {
+          cwd,
+          env: gitEnv(),
+          stdio: ["ignore", "pipe", "pipe"],
+          windowsHide: true,
+        });
+      } catch {
+        return null;
+      }
+    })();
+    if (child === null) {
+      reject(spawnFailed(cwd, args));
+      return;
+    }
 
     // Bounded: a repository that fails loudly must not be able to make
     // fathohm's own memory the next problem.
@@ -273,7 +328,7 @@ function spawnFailed(cwd: string, args: readonly string[]): CliError {
   if (!directoryReadable) {
     return new CliError(
       EXIT.cannotRead,
-      `\`${gitCommandLine(args)}\` could not be started — expected \`${cwd}\` to be a directory fathohm can enter, and it is not there.`,
+      `\`${gitCommandLine(args)}\` could not be started — expected \`${cwd}\` to be a directory fathohm can enter, and it is not one.`,
       `check the path — \`ls ${cwd}\` — and re-run fathohm against a directory that exists. (git itself is fine; this is the directory, not the tool.)`,
     );
   }

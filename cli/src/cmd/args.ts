@@ -736,16 +736,22 @@ function textValue(token: ParsedToken, spec: FlagSpec): string {
   return requireValue(token, spec);
 }
 
+/** A date (midnight UTC, spelled out for git) or a date-time with its zone: a
+ *  local time would read a different instant on every machine. */
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const ISO_INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:\d{2})$/;
+
 function isoValue(token: ParsedToken, spec: FlagSpec): string {
   const raw = requireValue(token, spec);
-  if (Number.isNaN(Date.parse(raw))) {
+  const value = ISO_DATE.test(raw) ? `${raw}T00:00:00Z` : raw;
+  if (!ISO_INSTANT.test(value) || Number.isNaN(Date.parse(value))) {
     throw new CliError(
       EXIT.usage,
-      `${token.raw} expects an ISO timestamp, got "${raw}"`,
+      `${token.raw} expects an ISO timestamp with a timezone (Z or ±HH:MM), got "${raw}"`,
       `try \`${token.raw} 2026-07-31T00:00:00Z\`.`,
     );
   }
-  return raw;
+  return value;
 }
 
 /**
@@ -760,8 +766,11 @@ export function parseDurationDays(raw: string): number | null {
   const match = /^(\d+)d?$/.exec(raw.trim());
   if (match === null) return null;
   const days = Number.parseInt(match[1], 10);
-  return Number.isFinite(days) && days > 0 ? days : null;
+  // Past ~1e8 days `now + horizon` is an Invalid Date (exit 4).
+  return Number.isFinite(days) && days > 0 && days <= MAX_HORIZON_DAYS ? days : null;
 }
+
+const MAX_HORIZON_DAYS = 36_500;
 
 /** A percentage in 0–100, with an optional `%`, or null. Shared with the
  *  config file's `max-blind` for the same reason as above. */
@@ -781,7 +790,7 @@ function daysValue(token: ParsedToken, spec: FlagSpec): number {
     throw new CliError(
       EXIT.usage,
       `${token.raw} expects a positive number of days, got "${raw}"`,
-      `try \`${token.raw} 90d\`.`,
+      `try \`${token.raw} 90d\` (at most ${MAX_HORIZON_DAYS}d).`,
     );
   }
   return days;

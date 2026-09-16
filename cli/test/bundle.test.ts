@@ -1,6 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
+import { gzipSync } from "node:zlib";
 
 import { beforeAll, describe, expect, it } from "vitest";
 
@@ -84,9 +85,12 @@ describe("the built bundle", () => {
     expect(readdirSync(DIST_DIR)).toEqual(["fathohm.cjs"]);
   });
 
-  it(`is under ${MAX_BUNDLE_BYTES / 1024}KB`, () => {
-    const bytes = statSync(BUNDLE_PATH).size;
-    expect({ bytes }, `the bundle is ${bytes} bytes`).toEqual({
+  it(`is under ${MAX_BUNDLE_BYTES / 1024}KB packed`, () => {
+    // PACKED, as the spec says: the gzipped bytes `npx` downloads. This used to
+    // weigh the unpacked file, a proxy ~4x stricter than the promise, and it
+    // went red on bug fixes while the download stayed a quarter of the ceiling.
+    const bytes = gzipSync(readFileSync(BUNDLE_PATH)).length;
+    expect({ bytes }, `the bundle packs to ${bytes} bytes`).toEqual({
       bytes: Math.min(bytes, MAX_BUNDLE_BYTES),
     });
   });
@@ -100,8 +104,8 @@ describe("the built bundle", () => {
    * mangled identifiers, and the sentence was false on the one surface that
    * shipped it. The size guard above is exactly the pressure that would put
    * `--minify` back, which is why this sits directly beneath it: the ceiling is
-   * 300KB and readable costs 274KB, so both fit, and the tradeoff is recorded
-   * rather than rediscovered.
+   * 300KB packed and readable packs to ~82KB (~301KB unpacked), so both
+   * fit, and the tradeoff is recorded rather than rediscovered.
    *
    * Asserted as a PROPERTY, never a byte count — a reader's greps survive, and
    * the prose explaining the arithmetic ships beside it.
@@ -204,7 +208,7 @@ describe("the built binary runs", () => {
     });
     // The literal is the published contract; the second assertion is what keeps
     // the artifact and the source from drifting while both stay green.
-    expect(printed).toBe("fathohm 1.6.0 (scorer v4)\n");
+    expect(printed).toBe("fathohm 1.6.1 (scorer v4)\n");
     expect(printed.trim()).toBe(versionLine());
   });
 

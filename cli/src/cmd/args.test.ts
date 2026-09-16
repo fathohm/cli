@@ -60,7 +60,7 @@ describe("flags", () => {
   const cases: Array<{ name: string; argv: string[]; expected: Partial<CliFlags> }> = [
     { name: "--now", argv: ["--now", "2026-07-31T00:00:00Z"], expected: { now: "2026-07-31T00:00:00Z" } },
     { name: "--now=", argv: ["--now=2026-07-31T00:00:00Z"], expected: { now: "2026-07-31T00:00:00Z" } },
-    { name: "--since", argv: ["--since", "2026-01-01"], expected: { since: "2026-01-01" } },
+    { name: "--since", argv: ["--since", "2026-01-01"], expected: { since: "2026-01-01T00:00:00Z" } },
     { name: "--json", argv: ["--json"], expected: { json: true } },
     { name: "--no-color", argv: ["--no-color"], expected: { noColor: true } },
     { name: "--ascii", argv: ["--ascii"], expected: { ascii: true } },
@@ -212,7 +212,7 @@ describe("usage errors", () => {
     {
       name: "--now must be a timestamp",
       argv: ["--now", "tomorrow"],
-      message: /--now expects an ISO timestamp, got "tomorrow"/,
+      message: /--now expects an ISO timestamp with a timezone \(Z or ±HH:MM\), got "tomorrow"/,
       hint: /2026-07-31T00:00:00Z/,
     },
     {
@@ -226,6 +226,24 @@ describe("usage errors", () => {
       argv: ["fade", "--horizon", "3 months"],
       message: /--horizon expects a positive number of days, got "3 months"/,
       hint: /90d/,
+    },
+    {
+      name: "--now must name its timezone",
+      argv: ["--now", "2026-09-15T00:00:00"],
+      message: /--now expects an ISO timestamp with a timezone/,
+      hint: /2026-07-31T00:00:00Z/,
+    },
+    {
+      name: "--now is ISO, not whatever Date.parse accepts",
+      argv: ["--now", "Sep 15 2026"],
+      message: /--now expects an ISO timestamp/,
+      hint: /2026-07-31T00:00:00Z/,
+    },
+    {
+      name: "--horizon has a ceiling",
+      argv: ["fade", "--horizon", "99999999999"],
+      message: /--horizon expects a positive number of days/,
+      hint: /at most 36500d/,
     },
     {
       name: "--horizon must be positive",

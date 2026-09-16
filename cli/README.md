@@ -18,6 +18,9 @@ npm install -g fathohm
 fathohm
 ```
 
+Or see the number in your editor's status bar, with the
+[VS Code extension](https://marketplace.visualstudio.com/items?itemName=fathohm.fathohm-vscode).
+
 ```
 FATHOHM — git-only reading of acme-api (12 code files)
 2026-07-31T00:00:00Z · scorer v4
@@ -107,6 +110,33 @@ Osmani](https://addyosmani.com/blog/comprehension-debt/) in March 2026; fathohm
 is an instrument for it, not a coinage of it.
 
 ---
+
+## What changed in 1.6.1
+
+Bug fixes. Two of them can change a number, and both changes make it more
+accurate.
+
+**A person named Claude is no longer read as an agent.** Signatures used to
+match a substring of the author's name or email, so `Claude Dupont`, or anyone
+at `precursor.io`, was labelled agent-authored and their code read as dark. A
+signature must now be a whole identity the tool actually writes, such as
+`noreply@anthropic.com` or `copilot-swe-agent[bot]`. The full list is in the
+published methodology.
+
+**git no longer inherits your whole environment.** Run from a git hook, the
+hook's `GIT_DIR` made fathohm read the hook's repository and print it under
+the target's name. git now receives only the variables it needs to find itself
+and its config (`PATH`, `HOME`, git's own config variables, temp dirs, and the
+Windows basics). No other environment variable reaches it.
+
+**Smaller fixes.** `--now` and `--since` require a timezone (`Z` or `±HH:MM`),
+or a bare date, which means midnight UTC. A local time used to read a
+different instant on every machine. `--horizon` stops at 36500 days instead
+of crashing. Pointing fathohm at a file is exit 3, not an internal error.
+Grafted history is detected after `git gc` and from linked worktrees.
+`explain <path>` resolves the path from where you are standing. A filename
+carrying terminal control bytes prints them as `\x1b` instead of executing
+them.
 
 ## What changed in 1.6.0
 
@@ -1084,6 +1114,8 @@ asking somebody to do. The hosted product's verification loop is built on it.
 | `--json` | Emit the reading as JSON instead of text. Every command supports it. |
 | `--no-color` | Never emit ANSI colour. `NO_COLOR` and a non-TTY stdout do the same. |
 | `--ascii` | ASCII-only glyphs, for CI logs and consoles that mangle box-drawing. |
+| `--light` | Colours for a light terminal background. Without a flag, fathohm reads `COLORFGBG` when the terminal sets it. |
+| `--dark` | Colours for a dark terminal background — the default when nothing says otherwise. |
 | `--quiet` | One line — the dark share and the comprehension-debt interval — plus the provenance. |
 | `--debug` | Print stack traces on failure. |
 | `--version`, `-V` | Print the CLI and scorer versions. |
@@ -1215,7 +1247,7 @@ version string is part of `--version`:
 
 ```
 $ npx fathohm --version
-fathohm 1.6.0 (scorer v4)
+fathohm 1.6.1 (scorer v4)
 ```
 
 The CLI does not implement scoring. It imports the same deterministic scorer
@@ -1312,7 +1344,7 @@ Two things worth grepping for, because they are the claims:
   | `readFileSync` | 1 | the `.fathohm.toml` you wrote — the only file it reads |
   | `writeFileSync` | 1 | the one HTML path you name on `fathohm map` |
   | `statSync` | 2 | sizes, never contents |
-  | `existsSync`, `readdirSync` | 1 each | is there a repo here, and what is in it |
+  | `existsSync` | 1 | is there a grafts file (replacements are asked of git) |
 
   No call opens a file in your source tree. `fetch(`, `http`, `net`, `tls` and
   `WebSocket` appear zero times; the sole `https` is the string
