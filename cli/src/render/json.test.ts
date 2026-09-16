@@ -13,6 +13,7 @@ import {
   teamOf,
 } from "../../test-helpers/reading-fixtures";
 import { evaluateCheck } from "../reading/check";
+import { IDENTITY_ID } from "../../../workers/src/identity-map";
 import { CLI_VERSION, SCORER_VERSION } from "../version";
 import { fileEntries } from "./entries";
 import { crossingFiles } from "./fade";
@@ -87,6 +88,46 @@ describe("the document parses against its own schema", () => {
     const { input, tide } = readInput();
     const rogue = { ...readDocument(input, tide), surprise: true };
     expect(() => validateJson(rogue as never)).toThrow();
+  });
+});
+
+// `team` is the only document that ever carried an identity, and the identity
+// `authorKeyFor` returns is an email address. The card beside it prints names;
+// the machine form was disclosing more than the human form of one reading.
+describe("team: the join key, without the address it is derived from", () => {
+  const document = () => teamDocument(readInput().input, teamOf(MIXED));
+
+  it("carries no email address anywhere in the serialised document", () => {
+    const text = serializeJson(document());
+    // The fixture's people, by their real fixture addresses.
+    for (const address of ["priya@acme.dev", "sam@acme.dev", "marco@acme.dev"]) {
+      expect(text).not.toContain(address);
+    }
+    // And the class, not just the three: any `@` inside a key is a regression.
+    for (const row of document().team?.rows ?? []) expect(row.key).not.toContain("@");
+    for (const row of document().team?.leave ?? []) expect(row.key).not.toContain("@");
+  });
+
+  it("gives every keeper an id, and every category row none", () => {
+    const rows = document().team?.rows ?? [];
+    for (const row of rows) {
+      if (row.kind === "keeper" || row.kind === "more") expect(row.key).toMatch(IDENTITY_ID);
+      // An empty key hashes to a perfectly real digest, and a `shared` row
+      // wearing one would invite a consumer to join two repositories on nobody.
+      else expect(row.key).toBe("");
+    }
+  });
+
+  it("joins a leave row to its keeper row, which is what the key is for", () => {
+    const team = document().team;
+    const keepers = new Set((team?.rows ?? []).map((row) => row.key));
+    for (const row of team?.leave ?? []) expect(keepers.has(row.key)).toBe(true);
+  });
+
+  it("is the same id for the same person on every run", () => {
+    expect(document().team?.rows.map((row) => row.key)).toEqual(
+      document().team?.rows.map((row) => row.key),
+    );
   });
 });
 

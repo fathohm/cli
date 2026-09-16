@@ -1,6 +1,6 @@
 {
   "fathohm": {
-    "cliVersion": "1.6.2",
+    "cliVersion": "1.6.3",
     "scorerVersion": "v4"
   },
   "command": "team",
@@ -47,7 +47,7 @@
     "rows": [
       {
         "kind": "keeper",
-        "key": "priya@acme.dev",
+        "key": "fh_fe4250fcc9f4",
         "name": "priya",
         "fileCount": 3,
         "bytes": 33000,
@@ -57,7 +57,7 @@
       },
       {
         "kind": "keeper",
-        "key": "sam@acme.dev",
+        "key": "fh_827fae3ec1a5",
         "name": "sam",
         "fileCount": 1,
         "bytes": 15000,
@@ -67,7 +67,7 @@
       },
       {
         "kind": "keeper",
-        "key": "marco@acme.dev",
+        "key": "fh_296f61ead34d",
         "name": "marco",
         "fileCount": 1,
         "bytes": 4000,
@@ -98,19 +98,19 @@
     ],
     "leave": [
       {
-        "key": "priya@acme.dev",
+        "key": "fh_fe4250fcc9f4",
         "name": "priya",
         "before": 43.425076452599384,
         "after": 85.47400611620795
       },
       {
-        "key": "sam@acme.dev",
+        "key": "fh_827fae3ec1a5",
         "name": "sam",
         "before": 43.425076452599384,
         "after": 60.24464831804281
       },
       {
-        "key": "marco@acme.dev",
+        "key": "fh_296f61ead34d",
         "name": "marco",
         "before": 43.425076452599384,
         "after": 51.07033639143731

@@ -1,6 +1,6 @@
 {
   "fathohm": {
-    "cliVersion": "1.6.2",
+    "cliVersion": "1.6.3",
     "scorerVersion": "v4"
   },
   "command": "check",

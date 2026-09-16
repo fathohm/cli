@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { scoreRepo, type RepoReading, type ScoredFile } from "../../cli/src/reading/scoring";
+import { CLI_VERSION } from "../../cli/src/version";
 import {
   EMPTY,
   FIXTURE_NOW,
@@ -320,19 +321,36 @@ describe("the file tooltip", () => {
 describe("the explain command", () => {
   it("shells out to the real CLI, so the card and the chip cannot disagree", () => {
     expect(explainCommandLine("cli/src/index.ts", false)).toBe(
-      "npx fathohm explain 'cli/src/index.ts'",
+      `npx fathohm@${CLI_VERSION} explain 'cli/src/index.ts'`,
     );
+  });
+
+  // The property, not the constant: what matters is that SOME exact version is
+  // named, and that it is this build's. A bare `npx fathohm` resolves a local
+  // package of that name — inside this monorepo, the workspace root — or a
+  // stale global install, and then the terminal answers with a different scorer
+  // than the status bar used.
+  it("pins a version, so npx can never reach a local or stale `fathohm`", () => {
+    const line = explainCommandLine("a.ts", false);
+    expect(line).toMatch(/^npx fathohm@\d+\.\d+\.\d+ explain /);
+    expect(line).toContain(`fathohm@${CLI_VERSION} `);
   });
 
   it("quotes a path with a space", () => {
     expect(explainCommandLine("my app/main.ts", false)).toBe(
-      "npx fathohm explain 'my app/main.ts'",
+      `npx fathohm@${CLI_VERSION} explain 'my app/main.ts'`,
     );
-    expect(explainCommandLine("my app/main.ts", true)).toBe('npx fathohm explain "my app/main.ts"');
+    expect(explainCommandLine("my app/main.ts", true)).toBe(
+      `npx fathohm@${CLI_VERSION} explain "my app/main.ts"`,
+    );
   });
 
   it("escapes the quote character of the shell it is writing for", () => {
-    expect(explainCommandLine("it's.ts", false)).toBe("npx fathohm explain 'it'\\''s.ts'");
-    expect(explainCommandLine('od"d.ts', true)).toBe('npx fathohm explain "od""d.ts"');
+    expect(explainCommandLine("it's.ts", false)).toBe(
+      `npx fathohm@${CLI_VERSION} explain 'it'\\''s.ts'`,
+    );
+    expect(explainCommandLine('od"d.ts', true)).toBe(
+      `npx fathohm@${CLI_VERSION} explain "od""d.ts"`,
+    );
   });
 });

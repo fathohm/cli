@@ -1,5 +1,7 @@
 import * as z from "zod/mini";
 
+import { identityId } from "../../../workers/src/identity-map";
+
 import { exactBlindShare, formatBlindShare, formatLimitPercent } from "../../../lib/blind-share-format";
 import { bucketOf, bucketSentence, explainReading } from "../../../lib/reading-explained";
 import type { CheckVerdict } from "../reading/check";
@@ -266,9 +268,10 @@ const teamSchema = z.strictObject({
   rows: z.array(
     z.strictObject({
       kind: z.enum(["keeper", "more", "shared", "no-human"]),
-      /** The identity `--without` matches on. Empty on non-`keeper` rows —
-       *  names collide, and a document a consumer cannot join person-to-person
-       *  on would be two 'Alex' rows about nobody in particular. */
+      /** The identity `--without` matches on — `identityId`'s `fh_` form, NOT
+       *  the git email it is derived from. Empty on non-`keeper` rows — names
+       *  collide, and a document a consumer cannot join person-to-person on
+       *  would be two 'Alex' rows about nobody in particular. */
       key: z.string(),
       name: z.string(),
       fileCount: z.number(),
@@ -285,7 +288,7 @@ const teamSchema = z.strictObject({
   ),
   leave: z.array(
     z.strictObject({
-      /** Same identity key as the matching keeper row. */
+      /** Same identity id as the matching keeper row. */
       key: z.string(),
       name: z.string(),
       /** SHARES (0–100): the whole reading's floor, with and without them. */
@@ -387,6 +390,11 @@ export const jsonDocumentSchema = z.strictObject({
   team: z.optional(teamSchema),
   paydown: z.optional(paydownSchema),
   tide: z.optional(tideSchema),
+  /** `map` only: where the page was written — resolve it against the directory
+   *  fathohm was invoked in. Relative and `/`-separated wherever a relative
+   *  spelling exists, which is everywhere except a target on a different
+   *  Windows drive: this document is committed and posted, and an absolute path
+   *  names the machine rather than the repository. */
   map: z.optional(z.strictObject({ out: z.string() })),
 });
 
@@ -561,14 +569,31 @@ function paydownTally(
   };
 }
 
-/** `team`: the keeper partition and the leave column, as the card ordered them. */
+/**
+ * `team`: the keeper partition and the leave column, as the card ordered them.
+ *
+ * THE ONLY PLACE THIS PRODUCT EVER PRINTED AN EMAIL ADDRESS, and it no longer
+ * does. `row.key` is `authorKeyFor`'s — a lowercased git email for nearly every
+ * human — and this document is the one output built to be piped into CI, posted
+ * onto a pull request and kept as an artefact. The card beside it prints names
+ * and never addresses; the machine form was disclosing more than the human form
+ * of the same reading, which is backwards. `identityId` carries the join (see
+ * its note on what that claim is and is not), and `--without` takes the `fh_`
+ * form, so a pipeline that read a key out of this document and fed it back
+ * keeps working.
+ *
+ * Non-keeper rows keep their empty key, exactly as before: an empty string
+ * hashes to a real digest, and a `shared` row wearing an id would invite a
+ * consumer to join two repositories on "nobody".
+ */
 export function teamDocument(input: DocumentInput, team: TeamReading): JsonDocument {
+  const id = (key: string): string => (key === "" ? "" : identityId(key));
   return {
     ...base("team", input),
     team: {
       rows: team.rows.map((row) => ({
         kind: row.kind,
-        key: row.key,
+        key: id(row.key),
         // The two category rows carry the SPEC's tokens rather than their
         // printed labels: "no human" is typography, `no-human` is a key.
         name:
@@ -580,7 +605,7 @@ export function teamDocument(input: DocumentInput, team: TeamReading): JsonDocum
         display: printedShare(row.units, row.share),
       })),
       leave: team.leave.map((row) => ({
-        key: row.key,
+        key: id(row.key),
         name: row.name,
         before: row.before,
         after: row.after,

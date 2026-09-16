@@ -71,12 +71,20 @@ const HERMETIC_CONFIG: readonly string[] = [
  *                            overrides beat anything such a file says.
  *   the Windows block      — a process there needs its own startup variables,
  *                            and git synthesises HOME from USERPROFILE or
- *                            HOMEDRIVE+HOMEPATH. UNPROVEN: nobody here can run
- *                            Windows, so the list is kept wide deliberately. A
- *                            missing name fails loudly (exit 3, "could not be
- *                            started"); a spare one costs nothing but audit
- *                            surface. It is pruned when a Windows CI job can
- *                            prove each drop.
+ *                            HOMEDRIVE+HOMEPATH. The list is kept wide
+ *                            deliberately. A missing name fails loudly (exit 3,
+ *                            "could not be started"); a spare one costs nothing
+ *                            but audit surface.
+ *
+ *                            SUFFICIENT, not yet minimal. The `windows` job in
+ *                            .github/workflows/ci.yml runs every suite that
+ *                            spawns git on windows-latest, so "git starts at
+ *                            all on Windows" is now asserted rather than
+ *                            reasoned about — it was written from documentation
+ *                            by people who could not run the platform. Dropping
+ *                            a name still needs its own experiment: one
+ *                            removal, one green run of that job, which is a
+ *                            thing that can finally be done.
  *
  * Dropped after being tested rather than reasoned about: `TZ` (every timestamp
  * fathohm passes git carries an explicit offset — see `isoValue` — and `%aI`

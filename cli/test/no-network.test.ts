@@ -41,13 +41,28 @@ const CLI_ROOT = path.join(process.cwd(), "cli");
 const SRC_DIR = path.join(CLI_ROOT, "src");
 const HELPERS_DIR = path.join(CLI_ROOT, "test-helpers");
 
-/** The node builtins the CLI and its fixtures are allowed to reach for. */
+/**
+ * The node builtins the SHIPPED bundle is allowed to require — four, and the
+ * list is asserted as an equality against the built artifact in C.
+ *
+ * `node:os` is deliberately not here. It appears only in fixtures (a temp
+ * directory to build a repository in), and a builtin the tests need is not a
+ * builtin the tool needs; keeping one list for both was how `node:os` came to
+ * look like part of the shipped surface.
+ */
 const ALLOWED_BUILTINS = [
   "node:child_process",
+  // One SHA-256, over one string, so that `team --json` can carry a stable
+  // identity without carrying the email address it is derived from. Hashing is
+  // the whole use — nothing here encrypts, signs or generates a key. See
+  // `identityId` in workers/src/identity-map.ts.
+  "node:crypto",
   "node:fs",
-  "node:os",
   "node:path",
 ] as const;
+
+/** …and what a FIXTURE may additionally reach for. Neither ships. */
+const ALLOWED_IN_TESTS = [...ALLOWED_BUILTINS, "node:os", "vitest"] as const;
 
 /** Standalone tokens that would name a network-capable module. */
 const MODULE_TOKENS = /(?<![A-Za-z0-9_$])(https|http|net|dns|tls|http2|dgram)(?![A-Za-z0-9_$])/g;
@@ -137,21 +152,44 @@ describe("A. every module specifier is an allowed one", () => {
   const files = [...walk(SRC_DIR), ...walk(HELPERS_DIR)].filter((file) =>
     file.endsWith(".ts"),
   );
+  const isFixture = (file: string): boolean =>
+    file.endsWith(".test.ts") || file.startsWith(HELPERS_DIR);
 
+  /** Every bare specifier this file imports — builtins and packages alike. */
+  function builtinsOf(file: string): string[] {
+    const found: string[] = [];
+    for (const specifier of specifiers(code(readFileSync(file, "utf8")))) {
+      if (specifier.startsWith("node:")) found.push(specifier);
+      // A bare builtin name (`require("http")`) never goes through `node:`.
+      else if (!specifier.startsWith(".") && !specifier.includes("/")) found.push(specifier);
+    }
+    return found;
+  }
+
+  // Containment here, EQUALITY in C. This walk sees `cli/src` only, and the
+  // allowlist is a statement about the ARTIFACT: `node:crypto` arrives through
+  // `workers/src/identity-map`, which ships inside the bundle and is not in
+  // this tree. C reads the bundle esbuild actually produced and asserts the
+  // list exactly, so a name that stops being used still has to be deleted from
+  // here — by the check that can see all of it.
   it("imports no node builtin outside the allowlist", () => {
-    const builtins = new Set<string>();
-    for (const file of files) {
-      for (const specifier of specifiers(code(readFileSync(file, "utf8")))) {
-        if (specifier.startsWith("node:")) builtins.add(specifier);
-        // A bare builtin name (`require("http")`) never goes through `node:`.
-        else if (!specifier.startsWith(".") && !specifier.includes("/")) {
-          builtins.add(specifier);
-        }
+    for (const file of files.filter((f) => !isFixture(f))) {
+      for (const builtin of builtinsOf(file)) {
+        expect(ALLOWED_BUILTINS, `${path.relative(CLI_ROOT, file)} imports ${builtin}`).toContain(
+          builtin,
+        );
       }
     }
-    // Set equality, not a subset: a builtin that stops being used should have
-    // to be deleted from here too, and a new one has to be argued for.
-    expect([...builtins].sort()).toEqual([...ALLOWED_BUILTINS, "vitest"].sort());
+  });
+
+  it("lets a fixture reach for a temp directory, and nothing more", () => {
+    for (const file of files.filter(isFixture)) {
+      for (const builtin of builtinsOf(file)) {
+        expect(ALLOWED_IN_TESTS, `${path.relative(CLI_ROOT, file)} imports ${builtin}`).toContain(
+          builtin,
+        );
+      }
+    }
   });
 
   it("imports no network-capable module, under any spelling", () => {
@@ -214,17 +252,18 @@ describe("C. the built bundle names no network module", () => {
     }
   });
 
-  it("requires only the allowed node builtins", () => {
+  it("requires the allowed node builtins, and exactly those", () => {
     const required = new Set<string>();
     for (const match of bundle.matchAll(/require\(\s*["']([^"']+)["']\s*\)/g)) {
       required.add(match[1]);
     }
-    for (const specifier of required) {
-      expect(
-        ALLOWED_BUILTINS,
-        `the bundle requires ${specifier} at run time`,
-      ).toContain(specifier);
-    }
+    // Set equality, on the artifact that ships: a new builtin has to be argued
+    // for in the list above, and one that stops being used has to be deleted
+    // from it. This is the only surface where both halves of that are true —
+    // the bundle carries everything esbuild pulled in, `cli/src` does not.
+    expect([...required].sort(), `the bundle requires ${[...required].sort().join(", ")}`).toEqual(
+      [...ALLOWED_BUILTINS].sort(),
+    );
   });
 
   it("carries exactly one URL, and it is the hosted link", () => {

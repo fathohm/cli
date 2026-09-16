@@ -9,6 +9,7 @@ import {
   newestContact,
   type DarkReasonId,
 } from "../../cli/src/reading/dark";
+import { CLI_VERSION } from "../../cli/src/version";
 import { exactBlindShare, formatBlindShare } from "../../lib/blind-share-format";
 import { scoreColor } from "../../lib/palette";
 import { contactLine, promptedOnlyLine, relativeAge } from "../../lib/reading-explained";
@@ -289,12 +290,26 @@ function reasonClause(reason: DarkReasonId): string {
  * shells out to the real `fathohm` rather than redrawing it, so the number in
  * the status bar and the card in the terminal can never be two readings.
  *
+ * PINNED TO A VERSION, and that is the whole point of this line. Bare
+ * `npx fathohm` resolves a LOCAL binary of that name before it looks at the
+ * registry, so in this monorepo — whose root package is itself called
+ * `fathohm` — it ran the workspace's package rather than the CLI, and on any
+ * machine carrying a stale `npm i -g fathohm` it ran whatever was installed
+ * years ago. Either way the terminal answers with a different scorer than the
+ * status bar just used, and two readings of one file is the one failure this
+ * extension exists to prevent. `fathohm@x.y.z` makes npx fetch (or reuse) that
+ * exact version, so the card in the terminal is the card this build computed.
+ *
+ * The version is imported rather than written down: `scripts/cli-version.ts`
+ * edits `cli/src/version.ts`, so this string moves with a release instead of
+ * becoming a sixth place somebody has to remember.
+ *
  * Quoted, because a repository path may contain a space. Single quotes on
  * POSIX shells (and PowerShell); double quotes on Windows, where `cmd.exe` has
  * no single-quote form at all.
  */
 export function explainCommandLine(relativePath: string, windows: boolean): string {
-  return `npx fathohm explain ${quoteArgument(relativePath, windows)}`;
+  return `npx fathohm@${CLI_VERSION} explain ${quoteArgument(relativePath, windows)}`;
 }
 
 function quoteArgument(value: string, windows: boolean): string {

@@ -618,10 +618,22 @@ describe("explain, fade and map carry their own section", () => {
       }
 
       const out = path.join(scratch, `${cell.name}-section.html`);
+      // Standing in `scratch` rather than at `run`'s default `/`, so the caller
+      // and the file share a volume. On Windows they would not: `/` resolves to
+      // the root of the CURRENT drive (the workspace, on D:) while the temp
+      // directory is on C:, and there is no relative path between two drives —
+      // `path.relative` correctly answers with an absolute one. That is a real
+      // case, documented on `relativeMapTarget`, and not the one this assertion
+      // is about.
       const map = parseDocument(
-        (await run(["map", cell.repo.dir, "--out", out, "--json", "--now", NOW])).stdout,
+        (await run(["map", cell.repo.dir, "--out", out, "--json", "--now", NOW], scratch)).stdout,
       );
-      expect(map.map?.out).toBe(out);
+      // Relative to where the caller stood, and resolving back to the file that
+      // was written — the round trip a consumer performs. The document travels;
+      // an absolute path in it would name the machine that produced it rather
+      // than the repository it is about.
+      expect(path.isAbsolute(map.map?.out ?? "/")).toBe(false);
+      expect(path.resolve(scratch, map.map?.out ?? "")).toBe(out);
       // `map --json` computes the tide as well as the tree; a document missing
       // it would mean the strip and the page disagreed about what was computed.
       expect(map.tide?.today.at).toBeDefined();

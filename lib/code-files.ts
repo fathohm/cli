@@ -105,6 +105,10 @@ const DENIED_EXTENSIONS = new Set<string>([
   // deno, pdm, mix, cocoapods, pub. Nobody hand-writes one, and "no human has
   // recently reviewed this" is not a debt about a file no human authored.
   "lock",
+  // Environment files in their `production.env` spelling — the `.env` and
+  // `.env.local` spellings carry no extension to deny by and are handled in
+  // `isCodeFile` itself. See the paragraph there.
+  "env",
   // NOT "txt", deliberately. CMakeLists.txt is build code and requirements.txt
   // is a dependency manifest — the extension is carried by real source in
   // enough ecosystems that denying it would lose code to gain notes.
@@ -134,9 +138,9 @@ const DENIED_INFIXES = [".generated."];
 
 /**
  * True when `path` should be treated as code. Default TRUE; a path is denied
- * only when its final segment is a known lockfile, ends in a known non-code
- * extension, matches a known non-code suffix, or carries a generation marker
- * inside the name. Case-insensitive.
+ * only when its final segment is a known lockfile, is a dotenv file, ends in a
+ * known non-code extension, matches a known non-code suffix, or carries a
+ * generation marker inside the name. Case-insensitive.
  *
  * Only the FINAL SEGMENT is ever examined. A directory called
  * `generated-reports/` says something about where a file sits, not about how it
@@ -147,6 +151,23 @@ export function isCodeFile(path: string): boolean {
   if (name === "") return true;
 
   if (DENIED_FILENAMES.has(name)) return false;
+
+  // ENVIRONMENT FILES, as a class: `.env`, `.env.local`,
+  // `.env.production.local`, whatever the next framework invents. A dotenv file
+  // is configuration and credentials — `KEY=value` lines a process reads at
+  // boot — and "no human has recently written, reviewed or explained it" is not
+  // a debt about one. It was scoring as code for a structural reason rather
+  // than a considered one: `.env` has no extension to deny by, because the
+  // leading dot IS the whole name, so the extension check below never sees it.
+  //
+  // It is denied HERE rather than by another entry in DENIED_FILENAMES for the
+  // same reason `.lock` is a class: the suffixes multiply per framework
+  // (`.env.test`, `.env.staging.local`) and a name list would be one release
+  // behind whichever tool added the next one.
+  //
+  // `.envrc` stays IN. direnv's file is a shell script, and a shell script is
+  // code — the rule is the dotenv NAME, not the three letters.
+  if (name === ".env" || name.startsWith(".env.")) return false;
 
   for (const suffix of DENIED_SUFFIXES) {
     if (name.endsWith(suffix)) return false;

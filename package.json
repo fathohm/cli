@@ -5,7 +5,7 @@
   "license": "MIT",
   "description": "Build tree for the fathohm CLI and VS Code extension. The published package is cli/.",
   "scripts": {
-    "cli:build": "esbuild cli/src/index.ts --bundle --platform=node --target=node20 --format=cjs --banner:js='#!/usr/bin/env node' --outfile=cli/dist/fathohm.cjs",
+    "cli:build": "esbuild cli/src/index.ts --bundle --platform=node --target=node20 --format=cjs --banner:js=\"#!/usr/bin/env node\" --outfile=cli/dist/fathohm.cjs",
     "build": "npm run cli:build",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",

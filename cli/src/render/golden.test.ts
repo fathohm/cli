@@ -520,7 +520,9 @@ const FILE_CASES: ReadonlyArray<{
       return serializeJson(
         readDocument({ reading, meta: meta("acme-api") }, tide, {
           command: "map",
-          out: "/tmp/fathohm/fathohm-map.html",
+          // What `index.ts` passes: `relativeMapTarget`'s output, never the
+          // absolute path the write used.
+          out: "fathohm-map.html",
         }),
       );
     },

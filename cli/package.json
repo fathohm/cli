@@ -1,6 +1,6 @@
 {
   "name": "fathohm",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "How much of your code has gone dark — no human wrote or prompted any of it in the last 180 days? A git-only reading in your terminal: metadata only, never file contents, no network.",
   "license": "MIT",
   "homepage": "https://fathohm.dev",

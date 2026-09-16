@@ -537,23 +537,28 @@ describe("extractRepo", () => {
   it("reads unicode, space and emoji paths, and CRLF files, unmangled", async () => {
     const repo = createFixtureRepo({ prefix: "unicode" });
     const crlf = "line one\r\nline two\r\n";
+    // `"` is not a legal character in an NTFS filename, so this one path cannot
+    // be created on Windows — the fixture fails there, not the assertion. It is
+    // the case that proves git's `core.quotePath` output is unquoted correctly,
+    // and Linux runs it on every push; the other three (a space, Cyrillic, an
+    // emoji, CRLF contents) are legal everywhere and stay in the set.
+    const quoted: Record<string, string> =
+      process.platform === "win32" ? {} : { "quote'and\"quote.ts": "1\n" };
     repo.commit({
       message: "odd paths",
       date: "2026-01-01T00:00:00+00:00",
       files: {
         "spa ce/dir/файл 🚀.ts": "export const emoji = 1;\n",
         "windows/crlf.ts": crlf,
-        "quote'and\"quote.ts": "1\n",
+        ...quoted,
       },
     });
 
     const extract = await readingOf(repo);
     const paths = extract.tree.map((entry) => entry.path).sort();
-    expect(paths).toEqual([
-      `quote'and"quote.ts`,
-      "spa ce/dir/файл 🚀.ts",
-      "windows/crlf.ts",
-    ]);
+    expect(paths).toEqual(
+      [...Object.keys(quoted), "spa ce/dir/файл 🚀.ts", "windows/crlf.ts"].sort(),
+    );
     expect(extract.history[0].paths.slice().sort()).toEqual(paths);
 
     const crlfEntry = extract.tree.find(

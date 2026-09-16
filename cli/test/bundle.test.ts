@@ -208,7 +208,7 @@ describe("the built binary runs", () => {
     });
     // The literal is the published contract; the second assertion is what keeps
     // the artifact and the source from drifting while both stay green.
-    expect(printed).toBe("fathohm 1.6.2 (scorer v4)\n");
+    expect(printed).toBe("fathohm 1.6.3 (scorer v4)\n");
     expect(printed.trim()).toBe(versionLine());
   });
 

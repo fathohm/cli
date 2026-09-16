@@ -76,9 +76,12 @@ decompose, and the state it does show is fully evidenced by two dates and the
 window. The factors still print in full under **Fathohm: Explain This File**,
 where the card is the UI.
 
-**`Fathohm: Explain This File`** runs `npx fathohm explain <path>` in the
-integrated terminal. The CLI card is the UI; the extension redraws nothing.
-Clicking the file chip runs it too.
+**`Fathohm: Explain This File`** runs `npx fathohm@<version> explain <path>` in
+the integrated terminal, pinned to the CLI version this build reads with. The
+CLI card is the UI; the extension redraws nothing. Clicking the file chip runs
+it too. The pin is deliberate: bare `npx fathohm` would take a local package of
+that name, or a stale global install, and answer with a different scorer than
+the status bar just used.
 
 **`Fathohm: Open the hosted Map`** opens <https://fathohm.dev/dashboard> in
 your browser, where the same reading is drawn as a treemap — every file at

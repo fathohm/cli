@@ -7,7 +7,7 @@ import { CliError, EXIT, reportFailure, type ExitCode } from "./cmd/errors";
 import { eventCollector, type CliEvent } from "./repo/events";
 import { extractRepo, type RepoExtract } from "./repo/extract";
 import { runSelector, type MountSelector } from "./interactive";
-import { resolveMapTarget, writeMapFile } from "./render/map";
+import { relativeMapTarget, resolveMapTarget, writeMapFile } from "./render/map";
 import { offboardReading } from "./reading/offboard";
 import { paydownReading } from "./reading/paydown";
 import { darkRows } from "./render/below";
@@ -341,7 +341,15 @@ async function runCommand(
     const target = resolveMapTarget(io.cwd, flags.out);
     const bytes = writeMapFile(target, renderMapPage(reading, meta));
     return flags.json
-      ? emitJson(io, readDocument(document, tide, { command: "map", out: target }))
+      ? emitJson(
+          io,
+          readDocument(document, tide, {
+            command: "map",
+            // Relative, always: the note below is this person's own screen, the
+            // document is an artefact that travels. See `relativeMapTarget`.
+            out: relativeMapTarget(io.cwd, target),
+          }),
+        )
       : emit(io, renderMapNote(reading, target, bytes, term, meta));
   }
 

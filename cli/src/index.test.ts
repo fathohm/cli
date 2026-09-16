@@ -44,12 +44,12 @@ describe("--version", () => {
   it("prints the pinned string and nothing else", async () => {
     const result = await run(["--version"]);
     expect(result.code).toBe(EXIT.ok);
-    expect(result.stdout).toBe("fathohm 1.6.2 (scorer v4)\n");
+    expect(result.stdout).toBe("fathohm 1.6.3 (scorer v4)\n");
     expect(result.stderr).toBe("");
   });
 
   it("prints the same string from the short alias", async () => {
-    expect((await run(["-V"])).stdout).toBe("fathohm 1.6.2 (scorer v4)\n");
+    expect((await run(["-V"])).stdout).toBe("fathohm 1.6.3 (scorer v4)\n");
   });
 });
 
@@ -207,7 +207,14 @@ describe("a reading, end to end", () => {
     expect(fromSub.stdout).toContain("sub/a.ts");
   });
 
-  it("prints a filename's control bytes visibly, never raw", async () => {
+  // SKIPPED ON WINDOWS, and not because the behaviour differs. A control byte
+  // is not a legal character in an NTFS filename, so the hostile repository
+  // this test needs cannot be created there at all — the fixture fails, not the
+  // assertion. What is under test is `printable()`, pure string arithmetic that
+  // no platform can disagree about, and Linux runs it on every push.
+  it.skipIf(process.platform === "win32")(
+    "prints a filename's control bytes visibly, never raw",
+    async () => {
     // A repository can name a file with a terminal escape in it; printed raw it
     // could recolour, move the cursor, or erase the PARTIAL READING banner.
     const repo = createFixtureRepo({ prefix: "escape" });
@@ -226,7 +233,8 @@ describe("a reading, end to end", () => {
 
     const json = await run(["read", "--now", NOW, "--json"], { cwd: repo.dir });
     expect(json.stdout).toContain("a\\u001b[2Jb.ts");
-  });
+    },
+  );
 
   it("explains a row of GONE DARK by its number", async () => {
     const repo = repoWithHistory();
@@ -729,6 +737,20 @@ describe("check, map and --json, end to end", () => {
         expect(document.now).toBe(NOW.replace("Z", ".000Z"));
         expect(document.provenance.agentShareIsLowerBound).toBe(true);
       }
+    });
+
+    // The document travels — committed, posted onto a PR, kept as a CI
+    // artefact — and it used to carry the absolute path of the machine that
+    // wrote it. Every other path in it is repo-relative.
+    it("names the map file relative to the working directory, never absolutely", async () => {
+      const repo = staleRepo();
+      const result = await run(
+        ["map", repo.dir, "--out", path.join(repo.dir, "j.html"), "--json", "--now", NOW],
+        { cwd: repo.dir },
+      );
+      expect(result.code).toBe(EXIT.ok);
+      expect(JSON.parse(result.stdout).map).toEqual({ out: "j.html" });
+      expect(result.stdout).not.toContain(repo.dir);
     });
 
     it("keeps the exit code the text form would have had", async () => {

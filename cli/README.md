@@ -1285,7 +1285,7 @@ version string is part of `--version`:
 
 ```
 $ npx fathohm --version
-fathohm 1.6.2 (scorer v4)
+fathohm 1.6.3 (scorer v4)
 ```
 
 The CLI does not implement scoring. It imports the same deterministic scorer

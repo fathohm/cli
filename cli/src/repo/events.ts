@@ -4,7 +4,7 @@ import {
   effectiveAuthorship,
   extractCoAuthors,
 } from "../../../workers/src/authorship";
-import { authorKeyFor } from "../../../workers/src/identity-map";
+import { authorKeyFor, IDENTITY_ID, identityId } from "../../../workers/src/identity-map";
 import type { FactorEvent } from "../../../workers/src/scorer";
 import { MERGE_PARENT_COUNT, type AgentSignature } from "../../../workers/src/types";
 import type { CommitRecord, CommitSink, TreeEntry } from "./extract";
@@ -261,6 +261,12 @@ export function inScope(path: string, scope: string | null): boolean {
  * email for a human and the name for a bot, and neither is what a colleague is
  * called out loud. An empty string matches nobody — an omitted `--without`
  * must not delete the events of a commit that carries no identity at all.
+ *
+ * A FOURTH SPELLING, for machines: `fh_<12 hex>`, the id `team --json` carries
+ * in place of the email it used to print. A pipeline that reads a key out of
+ * that document and hands it back to `--without` has always worked and still
+ * does. It is recognised by SHAPE first, so the hash is computed only for an
+ * argument that could be one — a name or an address never pays for it.
  */
 export function dropAuthor(events: CliEvent[], author: string): CliEvent[] {
   const wanted = normalize(author);
@@ -269,6 +275,7 @@ export function dropAuthor(events: CliEvent[], author: string): CliEvent[] {
 }
 
 function isAuthor(event: CliEvent, wanted: string): boolean {
+  if (IDENTITY_ID.test(wanted)) return identityId(event.actorId) === wanted;
   return (
     normalize(event.actorId) === wanted ||
     normalize(event.actorEmail) === wanted ||

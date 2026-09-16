@@ -63,6 +63,38 @@ export function resolveMapTarget(cwd: string, out: string | null): string {
   return target;
 }
 
+/**
+ * The same file, spelled the way `--json` may carry it: RELATIVE to where the
+ * caller stood, with `/` separators on every platform.
+ *
+ * `resolveMapTarget` returns an absolute path because that is what a write
+ * needs. Putting that string in the document put the machine in it too —
+ * `/Users/<somebody>/work/acme/fathohm-map.html` names a person and their
+ * directory layout, in the one output of this tool designed to be committed,
+ * posted to a PR and kept as a CI artefact. Every other path in that document
+ * is repo-relative; this was the single field that was not, which also meant
+ * two runs of the same reading on two checkouts produced two documents that
+ * differed in a field that says nothing about the repository.
+ *
+ * Relative, not the raw `--out` string: `--out ./map.html` and
+ * `--out "$PWD/map.html"` are the same instruction, and a document that echoed
+ * the spelling would disagree with itself about a file it wrote once. A
+ * consumer resolves it against the working directory it invoked fathohm in,
+ * which is the one directory it is guaranteed to know.
+ *
+ * A target outside the working directory keeps its `../` climb — correct, and
+ * still carrying no names.
+ *
+ * THE ONE CASE THAT STAYS ABSOLUTE: a different Windows drive. There is no
+ * relative path from `D:\repo` to `C:\tmp\map.html`, so `path.relative`
+ * answers with the absolute one, which is the only correct answer available.
+ * The round trip a consumer performs — resolve against the working directory —
+ * holds either way, and that is what the field promises.
+ */
+export function relativeMapTarget(cwd: string, target: string): string {
+  return path.relative(cwd, target).split(path.sep).join("/");
+}
+
 /** Writes the page, turning every filesystem failure into an error that names
  *  the path and one next step. */
 export function writeMapFile(target: string, html: string): number {

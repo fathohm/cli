@@ -4,7 +4,7 @@ import { SCORER_VERSION } from "../../workers/src/scorer";
  * The CLI's own version. Kept in lockstep with `cli/package.json` by a test —
  * the published binary and the string it prints must never disagree.
  */
-export const CLI_VERSION = "1.6.2";
+export const CLI_VERSION = "1.6.3";
 
 export { SCORER_VERSION };
 
