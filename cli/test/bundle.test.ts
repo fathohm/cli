@@ -233,7 +233,13 @@ describe("the published tarball", () => {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
     });
-    packed = (JSON.parse(out) as PackResult[])[0];
+    // npm 12 changed the shape: through 11 this was `[{…}]`, and it is now an
+    // object keyed by package name. Both are read, because the version of npm
+    // that runs this is the runner's, not ours — the publish workflow installs
+    // `npm@latest` and a major landed under it mid-release, red here and green
+    // on every developer machine.
+    const parsed = JSON.parse(out) as PackResult[] | Record<string, PackResult>;
+    packed = (Array.isArray(parsed) ? parsed[0] : Object.values(parsed)[0]) as PackResult;
   }, 300_000);
 
   it("is `fathohm`, at the version the binary prints", () => {
