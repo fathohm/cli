@@ -111,176 +111,13 @@ is an instrument for it, not a coinage of it.
 
 ---
 
-## What changed in 1.6.2
+**Two more documents, both in this package's repository:**
+[METHODOLOGY.md](https://github.com/fathohm/cli/blob/main/cli/METHODOLOGY.md) —
+every claim below, and what backs it.
+[CHANGELOG.md](https://github.com/fathohm/cli/blob/main/cli/CHANGELOG.md) —
+what moved in each release, and why.
 
-One fix, and it is about how the published file READS as much as what it does.
-
-1.6.1 stopped handing git your whole environment, but it still found the four
-`GIT_CONFIG_COUNT` variables by walking every variable on the machine and
-keeping the ones that matched. Nothing else was ever copied — and a
-supply-chain scanner reading the published bundle as text saw
-`Object.entries(process.env)` and reported, correctly for what it can see,
-that fathohm "reads your whole environment".
-
-Now every variable git inherits is looked up by name, and the list is short
-enough to print:
-
-```
-PATH                                    find the git the user's own shell runs
-HOME  XDG_CONFIG_HOME                   where ~/.gitconfig lives — which is how
-GIT_CONFIG_GLOBAL  GIT_CONFIG_SYSTEM    git sees the safe.directory a CI
-GIT_CONFIG_NOSYSTEM                     container needs to read the repo at all
-GIT_CONFIG_COUNT + the pairs it declares
-USERPROFILE  HOMEDRIVE  HOMEPATH  APPDATA  LOCALAPPDATA  SYSTEMROOT
-SYSTEMDRIVE  WINDIR  COMSPEC  PATHEXT  PROGRAMDATA  TEMP  TMP   (Windows)
-```
-
-Nothing else reaches git, and nothing enumerates the environment. `TZ`,
-`GIT_EXEC_PATH` and `TMPDIR` were dropped in the same pass, each after a test
-showed the reading does not depend on it. Note what is *not* there:
-`GIT_DIR`, `GIT_WORK_TREE`, `GIT_INDEX_FILE`, `GIT_NAMESPACE` and
-`GIT_CONFIG_PARAMETERS` — the variables that would quietly make fathohm report
-a different repository or history under your repository's name.
-
-The CLI's own output gets the same treatment: the renderer is handed the six
-variables it reads (`NO_COLOR`, `FORCE_COLOR`, `COLORFGBG`, `COLUMNS`, `TERM`,
-`CI`) instead of the environment.
-
-A test asserts this about the **built bundle**, not the source: every
-`process.env` in the published file is followed by a name.
-
-## What changed in 1.6.1
-
-Bug fixes. Two of them can change a number, and both changes make it more
-accurate.
-
-**A person named Claude is no longer read as an agent.** Signatures used to
-match a substring of the author's name or email, so `Claude Dupont`, or anyone
-at `precursor.io`, was labelled agent-authored and their code read as dark. A
-signature must now be a whole identity the tool actually writes, such as
-`noreply@anthropic.com` or `copilot-swe-agent[bot]`. The full list is in the
-published methodology.
-
-**git no longer inherits your whole environment.** Run from a git hook, the
-hook's `GIT_DIR` made fathohm read the hook's repository and print it under
-the target's name. git now receives only the variables it needs to find itself
-and its config (`PATH`, `HOME`, git's own config variables, temp dirs, and the
-Windows basics). No other environment variable reaches it.
-
-**Smaller fixes.** `--now` and `--since` require a timezone (`Z` or `±HH:MM`),
-or a bare date, which means midnight UTC. A local time used to read a
-different instant on every machine. `--horizon` stops at 36500 days instead
-of crashing. Pointing fathohm at a file is exit 3, not an internal error.
-Grafted history is detected after `git gc` and from linked worktrees.
-`explain <path>` resolves the path from where you are standing. A filename
-carrying terminal control bytes prints them as `\x1b` instead of executing
-them.
-
-## What changed in 1.6.0
-
-Nothing moved. The headline, the ledger, the exit codes and every number are
-what 1.5.x printed — this release is four additions, and each one exists
-because the reading was already true and could not get to where it was needed.
-
-**`fathohm check --format markdown` — the verdict, for the place it gets
-argued.** A gate failure is settled in a pull request, not in the terminal that
-produced it, and getting it there meant a screenshot or a hand-typed
-paraphrase. A paraphrase is where a number loses its bound, its denominator and
-its limit. The markdown carries the same verdict word, the same sentence, the
-canonical definition of the term, the first three dark paths and the command
-that reproduces it on any clone. `--json` is unchanged; naming both at once is
-a usage error rather than a silent winner.
-
-**`--scope <dir>` — a reading of one directory.** `read`, `explain`, `fade`,
-`team`, `paydown` and `offboard` take it, and it moves the DENOMINATOR: the
-subtree becomes the whole reading, headline, ledger, mini-map, trend and JSON
-together. Which is exactly why every scoped card states its own denominator in
-the header, in a sentence, before any number:
-
-```
-Reading: lib/ — 3 files, 18K, scoped; the repository's own number is different
-```
-
-A subtree share and a repository share read identically once the flag has
-scrolled off the screen, and this is the product that cannot afford a true
-number about the wrong subject. **`check` refuses `--scope` outright**, with an
-error that says why: its output is an exit code a pipeline acts on without
-reading a word, so there is no sentence that could make a scoped verdict safe.
-
-**`fathohm map` writes a Copy as PNG button.** The Map is the thing people
-paste into a thread, and a window-cropped screenshot of it loses the headline,
-the legend and the provenance. The button re-draws the page's own treemap at 2×
-and puts it on the clipboard — or offers it as a download where the clipboard
-API is missing, and says which before you press it. It is thirty lines of
-inline script and the file stays self-contained: nothing is fetched, and
-nothing is uploaded.
-
-**`--json` carries the byte split by agent signature.** A new
-`authorshipSignatures` object — `claude_code`, `copilot`, `cursor`, `unsigned`
-— beside the headline on every command, so a pipeline can ask which tool wrote
-the part of the codebase no human has a name on. It is data and it is never on
-a card: the subject of this product is the codebase and the humans on its
-record, and a vendor breakdown at card size would be a different one. The
-object carries its own `note`, because the two ways to misread it are both
-fatal and neither is visible from the key names: the vocabulary is three
-patterns rather than a census of the field, and `unsigned` is agent-labelled
-work whose commit recorded no signature — never human work. (In a git-only
-reading `unsigned` is structurally zero, since the label comes FROM the
-signature. It is carried at zero rather than dropped, so the shape does not
-change the day a reading has another source of labels.)
-
-A file counts once, under the newest commit that produced agent-authored
-content in it. Merges are not candidates: a merge is an acceptance rather than
-authorship — it wrote nothing — and letting one stand as a file's newest
-declaration filed 776K of fathohm's own code as `unsigned` when its signature
-had been recorded two commits earlier.
-
-## What changed in 1.5.0
-
-If you last ran 1.4.x, the headline moved. Worth two minutes:
-
-**It used to be a comprehension-debt share** — the floor drawn large, the
-ceiling named in the caption underneath it. Now it is the dark share, and the
-debt interval is the closing block.
-
-**Why.** Git records commits; it does not record reviews. `human_review_depth`
-carries `0.40` of the score, so a git-only comprehension-debt reading is a
-range rather than a number — and that range was supposed to bracket the number
-the hosted product publishes for the same repository. Measured, it does not.
-hono's history carries 31 merge commits in 2,137: it squash-merges almost every
-pull request, and a squash-merged PR can leave nothing in the commit graph for
-the ceiling to credit, so the reviews that actually happened are uncreditable
-here and the hosted number can land outside the interval entirely. Two numbers
-for one repository, in the same units, with the same word beside them, and no
-rule a reader could apply to reconcile them — on the one surface whose whole
-argument is *run it yourself*.
-
-So the CLI stopped competing with the hosted number and started answering the
-question git can actually close.
-
-What that moved, concretely:
-
-- **`BELOW THE LINE` is now `GONE DARK`**, cut on a different predicate: no
-  human wrote or prompted the file inside the window, rather than a score under
-  the line. Different headings, and no score column on a row.
-- **`fathohm explain <n>` numbers the dark list**, in the order the card prints
-  it. `explain 3` is the third file of `GONE DARK`, not of a below-the-line
-  list.
-- **The comprehension-debt interval is demoted**, not deleted: it closes the
-  card as two labelled readings, with the trend strip under the heading that
-  names the quantity it plots.
-- **The card's leverage line is gone.** It used to close the file list with
-  *"a recorded, commented review of the 5 files above re-scores this repo …"*.
-  A review does not make a file lit — recency is a fact about who authored it —
-  so the line recommended work that provably could not move the number printed
-  above it. The counterfactual still exists, in `fathohm paydown`, against the
-  number it does move.
-- **The metaphor word beside the big number is retired.** Every card that used
-  to wear a nautical label for the debt now prints `comprehension debt`, the
-  plain term, in the block that carries it.
-- **`check`, `fade`, `paydown` and `offboard` did not change.** They still
-  speak in comprehension debt and the 0.30 line, because a gate, a forecast, a
-  ladder and a handover are all questions about the score.
+---
 
 ## Two questions, and git can only close one
 
@@ -298,350 +135,62 @@ sentences are true, about different things.
 
 ## The honesty model
 
-This is the part worth reading before the flags.
+Six claims. Each one is checkable, and the reasoning behind every one of them is
+in [METHODOLOGY.md](https://github.com/fathohm/cli/blob/main/cli/METHODOLOGY.md)
+rather than compressed into an aside here.
 
-### The headline is one number, and you can check it
+**The headline is one number, and you can check it.**
 
     dark(file)  ⇔  no human authored or prompted a commit touching it
                    inside the last 180 days
 
 That is the scorer's own `human_author_recency` factor read at zero, not a
-second derivation living in the CLI. A human-authored commit counts in full, a
-mixed one — a person formed the intent, an agent produced the diff — counts at
-the scorer's own quarter weight, and both words in *"wrote or prompted"* are
-therefore load-bearing: a file somebody prompted last week is lit, and a
-sentence claiming nobody had written any of it would be wrong in exactly the
-direction that flatters the headline.
+second derivation living in the CLI. Both words in *"wrote or prompted"* are
+load-bearing: a file somebody prompted last week is lit, and a sentence claiming
+nobody had written any of it would be wrong in exactly the direction that
+flatters the headline.
 
-Nothing in it is a claim about anybody's head. It is a claim about a record,
+**Nothing in it is a claim about anybody's head.** It is a claim about a record,
 reproducible from the same clone and the same clock with `git log`.
 
-### What the dark share is not
-
-It is not a comprehension-debt estimate and it never stands in for one. Dark
-code can be thoroughly reviewed code that nobody has needed to touch in a year;
-lit code can be code three people rewrote yesterday with nobody reading the
-diff. The card prints both numbers, under two different headings, with the
-denominator and the window named on each.
-
-### `start here:` is advice, and the advice shows its working
-
-The line under the headline names one file:
-
-> `start here: components/Map.tsx · hand-written 300d ago · 1 human in its
-> history`
-
-It is deliberately an **imperative and not a superlative**. "The largest blind
-spot" would be a measurement, and it is one the ordering does not support — the
-row is the biggest *application* file of the biggest *group*, so a larger dark
-file can easily sit in a smaller group or a lower tier. A false superlative in
-the most-read line on the card is exactly what a tool like this cannot afford.
-
-A recommendation cannot be false. What stops it being empty is that its whole
-basis is printed with it: when a human last touched the file and by which hand,
-how many humans are anywhere in its history — and the ordering that chose the
-row is stated out loud in the section head a few lines below. Disagree with it
-and you can see precisely what produced it.
-
-It is row one of the ledger, so it is also the path the `factor by factor:`
-line prints and the file `fathohm explain 1` resolves.
-
-**"1 human in its history", not "bus factor 1."** They are the same count and
-not the same sentence: a bus factor is a claim about an organisation — who
-still works here, who else has read the file — and this reading has no view of
-any of that. What git carries is how many humans appear in the file's commit
-history, and that is what the row says. The factor keeps its name inside
-`fathohm explain`, where it sits beside its weight and its contribution.
-
-### The chart is a stacked bar, and it names its own cells
-
-```
-WHERE THE DARK CODE IS  ·  bar length = share of this repository
-█ = gone dark     ░ = a human wrote or prompted it recently
-app/                     ██░░░░░░░                            26% · 17% dark
-components/              ████████░                            25% · 92% dark
-workers/                 ░░░░░░░░                             21% · 0% dark
-```
-
-Two encodings, and neither can erase the other. The **length** of a bar is that
-directory's share of the repository — `app/` is a quarter of the code. The
-**solid run inside it** is how much of *that directory* is dark, which is a
-share of the folder rather than of the repo, and is spelled out again in the
-clause at the end of the row.
-
-It used to be one glyph per bar, picked off a height ramp by the row's
-darkness: taller block, darker directory. That reads well on a repository in
-trouble and fails on a healthy one, because the ramp's bottom rung is `▁` — so
-a directory with nothing dark drew as a hairline on the baseline, and a
-repository with nothing dark anywhere printed a whole chart of underscores in
-one flat colour. The encoding meant to carry the alarm was erasing the one
-carrying the size.
-
-Rounding is not allowed to flatter. A directory with **any** dark bytes draws
-at least one solid cell, and a directory that is not **wholly** dark keeps at
-least one light cell — except in a one-cell bar, which cannot hold a proportion
-and goes solid, because "some dark" drawn as clean is the error that costs a
-reader something.
-
-With nothing dark anywhere the heading says what the block actually is —
-`WHERE THE CODE IS` — rather than promising a map of something that is not
-there.
-
-### GONE DARK adds up, and that is the whole point of it
-
-It is not a list of files with a banner over it. It is a decomposition: one
-group per reason a file went dark, the files that carry it printed underneath
-the group that describes them, and a column of percentages that sums — in
-print, on the screenshot — to the number drawn at the top of the card.
-
-The groups are a total, disjoint partition of exactly the file set the headline
-is computed from, which is what makes *"the groups plus the coda are the whole
-repository"* a property rather than a promise. The coda is the lit remainder:
-`still lit — 55% of the code · a human wrote or prompted it inside the last 180
-days`.
-
-**The shares are allocated, not rounded.** Rounding each group on its own does
-not add up: three groups of 33.3% print `33` three times, and a reader counts
-99 against a headline of 100. So the arithmetic runs in one direction:
-
-1. **the headline is the authority** — its printed value is computed exactly as
-   it always was, and the ledger never moves it;
-2. the dark groups share out exactly that many whole points by **largest
-   remainder** — floor every exact percentage, then hand the leftovers to the
-   largest fractions first;
-3. the coda takes **what is left of a hundred**, rather than being rounded on
-   its own. Two complementary shares rounded independently can both be correct
-   and still print 101.
-
-The one exception is a display floor. `<1%` and `>99%` are deliberately not
-integer claims — a repository that is 99.9% dark must print `>99%` beside
-`<1%`, because `100%` beside `0%` would claim a codebase with no human hand
-anywhere in it. A group inside a floor prints its floor and is never handed a
-point it could not show.
-
-**Five file rows, shared across the groups by weight.** The row budget is
-allocated the same way the percentages are, capped by what each group actually
-holds. A group that ends up with no rows still prints its heading — the heading
-is the finding, the rows are only evidence for it, and a small group
-disappearing would be the decomposition quietly losing a term. When the entire
-dark set weighs zero bytes — a tree whose only dark files are empty ones — the
-rows are shared out by file count instead, because a byte-weighted share of
-nothing is a division by zero rather than a judgement, and the section does not
-get to vanish because its subject weighs nothing.
-
-**A row is a path and two clauses**, and neither of them is a score. The
-clauses are the file's newest human contact (hand-written, prompted, or none)
-and how many humans are anywhere in its history — both read off the same
-engagement record the heading above the row was built from, so a row can never
-describe a different contact than the group it sits under. The score left the
-row because the section is no longer selected on it; it is still in
-`fathohm explain`, still in `--full`, and still in the closing block.
-
-### Inside a group, application code comes first
-
-The rows are ordered by three keys: **kind, then bytes, then path.**
-
-Three tiers, read off the filename and the path segments, and nothing else:
-
-| tier | what is in it |
-| --- | --- |
-| application code | everything else — what a reader would call "the code" |
-| the scaffolding | config (`json`, `yml`, `toml`, `ini`, `Dockerfile`, `Makefile`), sql and `migrations/`, `scripts/`, `dist/`, `build/` |
-| tests and styles | `*.test.*`, `*.spec.*`, `_test.`, `test_*`, `test/`, `tests/`, `__tests__/`, `e2e/`, and `css`/`scss`/`sass`/`less`/`styl` |
-
-A test nobody has touched in a year is a different sentence from an API route
-nobody has touched in a year, and the card has about four seconds to hand over
-the second one. A test that lives under `scripts/` is a test — the further tier
-wins.
-
-**This is ordering only.** It enters no score, removes nothing from any count,
-and changes no denominator: a demoted file is still dark, still in the roster,
-still in the byte share the headline is computed from, and still printed when
-it reaches the rows. A repository whose dark code genuinely is all tests gets
-told so, because the list runs out of everything else before it runs out of
-rows.
-
-### Comprehension debt closes the card, as two readings
-
-> `COMPREHENSION DEBT — git alone cannot measure it`
-
-Git records commits. It does not record **reviews** — there is no such thing as
-a pull-request review in a `.git` directory. A tool that scored your repository
-with `human_review_depth = 0` and printed one number would be reporting *"not
-measured"* as *"measured, and it was nothing"*, which would make a thoroughly
-reviewed codebase look exactly like an unreviewed one. So the debt reading is a
-pair:
-
-- the **floor** is the record as it stands — no review counted anywhere,
-  because git records none;
-- the **ceiling** is the same record with full review credit for every file
-  that went through a pull request.
-
-**The range between them is your unmeasured review record.** As much of it as
-git can point at, which is the catch, and the reason this pair is no longer the
-headline: the ceiling is only handed to a file git can see was PR-mediated — it
-was touched by a merge commit, or by a commit whose subject ends `(#1234)`,
-GitHub's squash convention. A squash-merged pull request that leaves neither
-marker leaves nothing for the ceiling to credit, however carefully it was
-reviewed.
-
-So the card prints them as **two labelled readings and nothing else**: each is
-one reading of the same record, nothing in git says which is right, and the App
-is what settles it. It never says the truth sits between them. That phrasing
-sounds like humility and is a claim about a distribution nobody has measured —
-worse, it is testably wrong in one direction, because the hosted number for a
-squash-merging repository can land outside the interval rather than inside it.
-
-The **TREND** block lives here for the same reason: it plots the debt interval
-over the past year against the files you have today, and a trend printed a
-dozen lines away from the quantity it belongs to is two unexplained numbers on
-one card.
-
-It used to open with a sparkline — twelve monthly cells, a rule, today, a rule,
-the forecast. It had no axis, the two rules separating measurement from
-prediction were never named, and every cell plotted the *floor* while the rows
-underneath print the *interval*, so on a repository whose floor had fallen the
-picture read "better" beside a row ending `>99%`. Fifteen characters, four ways
-to be misread. The rows carry every fact it carried and label themselves.
-
-It draws **only the months git's record covers**. Every point is a full reading
-at a moved clock, so at any instant before the first commit every file reads as
-though nothing had ever been written to it, and the point renders `100%` —
-which on a ten-week-old repository filled ten of the twelve cells with a
-year-long cleanup that never happened. When the
-record is shorter than the window the strip says so, with the date you can
-check:
-
-> `git's record here starts 2026-06-05, so there is no full year to draw.`
-
-The stops are **rows, not an arrow chain**. Each stop is an interval and an
-interval already contains a separator, so `2025-07-31: 100% → today: <1% →
-2026-11-12: 14% – >99%` put two lookalike separators on one line meaning
-opposite things, and mixed bare values with pairs depending on whether the
-interval happened to be zero-width. One stop per line, share in a right-aligned
-column. A series that never moves collapses to a single sentence rather than
-printing the same interval three times.
-
-### The provenance block says what could not be seen
-
-Every card ends with what the reading did not have. One line of it is
-permanent, on every reading, with nothing to trigger it:
-
-> authorship is declared, not detected: undeclared agent work reads as human.
-
-Agent authorship is detected from things an agent declares: a
-`Co-Authored-By:` trailer, a recognized committer signature (`claude_code`,
-`copilot`, `cursor`). An agent that signs nothing is indistinguishable from a
-person typing. So **every agent-share number fathohm prints is a floor**, never
-an estimate and never a ceiling.
-
-The conditional lines join it when they apply: a shallow or grafted clone gets
-a loud `PARTIAL READING` banner (and `fathohm check` exits 3 rather than
-passing or failing on a fragment); a `--since` window, an `--at` ref, skipped
-submodules, `.fathohm.toml` exclusions and a `--without` that matched nobody
-all get a line of their own.
-
-### Nothing to fathom is its own answer
-
-An empty repository, a tree with no code in it, a tree whose code files are all
-empty: these print *"nothing to fathom here yet"* and exit 0. You will never
-get a `0%` or a `100%` screenshot out of a repository the tool could not
-actually see into.
-
-A genuine zero is not that case, and it does not get a reassuring sentence
-either. A repository where a human wrote or prompted everything this month is
-`0%` dark and can still be entirely in comprehension debt — so the zero card
-does two things differently. It **banners** the result instead of drawing it at
-the size of a claim (a five-row `0%` under the words GONE DARK reads as either
-direction until you already know the vocabulary), and it **prints the wider
-reading's own share in the lede** rather than pointing at a block a screen
-below. Here that number is `100%`, and you meet it in the fourth line:
-
-```
-FATHOHM — git-only reading of prompted-only (6 code files)
-2026-07-31T00:00:00Z · scorer v4
-
-  None of this code has gone dark: a human wrote or prompted every one of
-  these 6 files within the last 180 days.
-
-  100% of it is code no human has recently written, reviewed, or explained —
-  the question git cannot close alone. The block below decomposes it.
-
-  Every one of these 6 files has exactly one human in its history: when that
-  person stops committing, nothing keeps the file lit.
-
-  to see who they are: fathohm team
-
-  WHERE THE CODE IS  ·  bar length = share of this repository
-  src/                     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░     91%
-  test/                    ░░                                    7%
-  ./                       ░                                     3%
-
-  authorship is declared, not detected: undeclared agent work reads as human.
-
-  ────────────────────────────────────────
-  COMPREHENSION DEBT — git alone cannot measure it
-  Comprehension debt: code no human has recently written, reviewed, or
-  explained — measured from the record, not a survey.
-    100% here, and it is exact: nothing counted as debt ever went through a
-    pull request, so no review credit could lower it.
-
-  TREND — today's files, re-scored as of each date
-    100% throughout, unchanged over the 3 months read, and unchanged in 90
-    days with no new commits.
-  git's record here starts 2026-04-02, so there is no full year to draw.
-
-  git does not record PR reviews. The GitHub App reads them and settles which
-  reading is right — https://fathohm.dev
-
-  no telemetry, no network: this reading used only your local git history.
-  Verify by running it offline.
-```
-
-**A zero can also mean "the dark files weigh nothing".** The headline is
-byte-weighted and the dark set is a predicate, so an empty code file —
-`__init__.py`, `py.typed`, a placeholder `index.ts` — is dark and weighs
-nothing, and a repository whose only dark files are empty ones reads `0%` while
-the ledger still names them. That reading gets its own sentence rather than the
-one above:
-
-> `The 2 files that have gone dark here are empty, so they weigh nothing: every
-> file with code in it was written or prompted in the last 180 days. The ledger
-> below names them.`
-
-…and then, like every zero card, the wider reading's own share in the same
-breath.
-
-The card that said *"Nothing here has gone dark"* while `--full` listed the
-files, `explain 1` resolved one and `--json` carried them was reporting a
-weight as a count.
-
-### It runs fully offline
-
-fathohm opens no socket. Not for telemetry, not for a version check, not for
-the hosted product.
-
-**Verify it behind a firewall:** disconnect the machine, or drop all egress,
-and run every command. Nothing changes, because there is nothing to change —
-the bundle contains no `http`, `https`, `net`, `dns` or `tls` import, no
-`fetch(`, no `WebSocket`. There is a test in this repository that greps both
-the source *and* the built bundle and fails if one appears. The single URL that
-appears anywhere in the output (`https://fathohm.dev`) is a string in a
-sentence; there is no code that could fetch it.
-
-It also has **zero runtime dependencies**. One bundled file, no `postinstall`,
-Node ≥ 20.9.
-
-### It never writes to your repository
-
-Every command is a read: `git log`, `git ls-tree`, `git rev-parse`. The one
-exception is `fathohm map`, which writes exactly one HTML file — the path you
-named — and refuses to write inside `.git`.
-
-Source code is never read. Not sampled, not hashed, not sent anywhere: the tool
-reads commit metadata (messages, authors, dates, the paths each commit touched)
-and the byte size of each file in the tree. It has no code path that opens a
-file in your working tree.
+**Every agent-share number is a floor.** Agent authorship is detected from what
+an agent declares — a `Co-Authored-By:` trailer, a recognised committer
+signature. An agent that signs nothing is indistinguishable from a person
+typing, so every card carries that sentence permanently, with nothing to trigger
+it.
+
+**Comprehension debt is two readings, not one.** Git records commits; it does
+not record reviews — there is no such thing as a pull-request review in a `.git`
+directory. A tool that scored `human_review_depth = 0` and printed one number
+would report *"not measured"* as *"measured, and it was nothing"*. So the card
+prints a floor (no review counted anywhere) and a ceiling (full credit for every
+file git can see went through a pull request), as two labelled readings. It
+never says the truth sits between them: that sounds like humility and is a claim
+about a distribution nobody has measured.
+
+> Comprehension debt: code no human has recently written, reviewed, or explained
+> — measured from the record, not a survey.
+
+**The dark share is not a comprehension-debt estimate** and never stands in for
+one. Dark code can be thoroughly reviewed code nobody has needed to touch in a
+year; lit code can be code three people rewrote yesterday with nobody reading
+the diff. The card prints both, under two headings, with the denominator and the
+window named on each.
+
+**It runs offline, writes nothing, and never reads your source.** No socket —
+not for telemetry, not for a version check. Disconnect the machine and run every
+command; nothing changes, because the bundle contains no `http`, `https`, `net`,
+`dns` or `tls` import, no `fetch(`, no `WebSocket`, and a test greps both the
+source and the built bundle. Every command is a read (`git log`, `git ls-tree`,
+`git rev-parse`); the one exception is `fathohm map`, which writes exactly the
+one HTML file you name and refuses to write inside `.git`. Source code is never
+read — not sampled, not hashed, not sent anywhere. Zero runtime dependencies,
+one bundled file, no `postinstall`, Node ≥ 20.9.
+
+**And nothing to fathom is its own answer.** An empty repository, a tree with no
+code in it, a tree whose code files are all empty: these print *"nothing to
+fathom here yet"* and exit 0. You will never get a `0%` or a `100%` screenshot
+out of a repository the tool could not see into.
 
 ---
 
@@ -1024,7 +573,7 @@ target than on its own: the flag is what produces the closing gate line, and
 `npx fathohm paydown` prints everything here except that last line.
 
 ```
-FATHOHM — git-only reading of job-ai · the paydown ladder
+FATHOHM — git-only reading of acme-jobs · the paydown ladder
 2026-07-31T00:00:00Z · scorer v4
 git records no reviews — every rung below is this reading re-scored as if one
 existed
@@ -1094,15 +643,12 @@ why the card no longer closes its file list with a review recommendation.
 rung is conditional and every verb says so. The experiment that checks it is:
 record those reviews, run it again.
 
-**It is not the cheapest path, and it does not claim to be.** The ladder is
-ordered the way every other surface orders files — application code ahead of
-scaffolding, bytes descending inside a tier — so a byte-greedy set would reach
-any given share in fewer files. A card calling this the cheapest or shortest
-route would be making a claim you could refute from the same clone.
-
-**There is no effort estimate, and there will not be one.** No hours, no "quick
-win", no difficulty. Git carries no evidence for any of it. What the ladder
-knows is how many files, how many bytes, and what the scorer returns.
+**It claims nothing git cannot carry.** No hours, no "quick win", no
+difficulty — and it is not the cheapest path either: the ladder is ordered the
+way every other surface orders files, so a byte-greedy set would reach any given
+share in fewer files. What the ladder knows is how many files, how many bytes,
+and what the scorer returns. Calling it the shortest route would be a claim you
+could refute from the same clone.
 
 **The interval and the ladder are two different questions**, and the card says
 so out loud because they sit four lines apart. The *ceiling* is what a review
@@ -1135,13 +681,6 @@ and the gate flags both travel into `fathohm paydown … --full`, and the
 baseline travels into the `fathohm explain` cross-reference: a command that
 hands you different numbers than the rows you just read is worse than no
 command.
-
-**What the practice is called.** fathohm computes a mechanism and stops there —
-the card names files and factors, never techniques. The practice the field has
-converged on for the reading itself is **explain-back review** (*"can you
-explain this without referencing the prompt?"*) and **system walks**; that
-vocabulary is not ours and it is not on the card, but it is what a rung is
-asking somebody to do. The hosted product's verification loop is built on it.
 
 ### Global options
 
@@ -1200,12 +739,7 @@ list is past the risk that the number reads as the reason the file is listed:
   0.083   900B package.json
 ```
 
-The heading is two lines because one line could not say it without inverting
-it. `0.083` is a **score** — 0 to 1, higher is better — so a label reading
-*"comprehension debt at the floor"* over that column made `0.083` look like
-less debt than `0.167`, exactly backwards, and in the wrong unit besides: every
-comprehension-debt figure elsewhere on the card is a percentage share. Naming
-the columns costs a line and cannot be misread.
+
 
 `check` gates the **ceiling** by default — the reading with the missing review
 record at its most generous. A repository that fails the ceiling has failed the

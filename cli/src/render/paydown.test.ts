@@ -85,7 +85,7 @@ describe("the moves-nothing claim is about the whole card", () => {
 describe("every printed command reproduces the card that printed it", () => {
   it("carries a --without baseline into the ladder's own commands", () => {
     const paydown = paydownOf(PROMPTED_DOMINANT, { without: ["Ada Lovelace"] });
-    const text = flat(renderPaydown(paydown, term(), meta({ target: "job-ai" })));
+    const text = flat(renderPaydown(paydown, term(), meta({ target: "acme-jobs" })));
 
     expect(text).toContain("baseline: without Ada Lovelace");
     expect(text).toContain("fathohm paydown --without 'Ada Lovelace' --full");
@@ -94,7 +94,7 @@ describe("every printed command reproduces the card that printed it", () => {
 
   it("carries the gate flags, so --full prints the same gate line", () => {
     const paydown = paydownOf(PROMPTED_DOMINANT, { maxBlind: 40, pessimistic: true });
-    const text = flat(renderPaydown(paydown, term(), meta({ target: "job-ai" })));
+    const text = flat(renderPaydown(paydown, term(), meta({ target: "acme-jobs" })));
     expect(text).toContain("fathohm paydown --max-blind 40 --pessimistic --full");
     expect(text).toContain("fathohm check --max-blind 40 --pessimistic");
   });

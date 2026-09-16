@@ -217,7 +217,7 @@ describe("every command carries the same spine", () => {
 describe("raw numbers and display strings, side by side", () => {
   it("the headline carries both, and the strings are the floored ones", () => {
     const { input, tide, reading } = readInput(PROMPTED_DOMINANT);
-    const document = readDocument({ ...input, meta: meta("job-ai") }, tide);
+    const document = readDocument({ ...input, meta: meta("acme-jobs") }, tide);
     expect(document.headline.floor).toBeCloseTo(
       (reading.floorBlindBytes / reading.scoredBytes) * 100,
       10,

@@ -288,7 +288,7 @@ describe("the cells", () => {
   });
 
   it("gives every cell a readout of path, score and bucket", () => {
-    const html = page(PROMPTED_DOMINANT, "job-ai");
+    const html = page(PROMPTED_DOMINANT, "acme-jobs");
     expect(html).toContain("data-fathohm=\"src/agents/router.ts · ");
     expect(html).toMatch(/data-fathohm="src\/agents\/router\.ts · 0\.\d{3} · [a-z ]+ · \d/);
   });

@@ -5,7 +5,7 @@
   },
   "command": "explain",
   "now": "2026-07-31T00:00:00.000Z",
-  "target": "job-ai",
+  "target": "acme-jobs",
   "provenance": {
     "shallow": false,
     "grafted": false,

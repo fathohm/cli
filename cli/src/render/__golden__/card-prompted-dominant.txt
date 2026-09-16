@@ -1,4 +1,4 @@
-FATHOHM -- git-only reading of job-ai (11 code files)
+FATHOHM -- git-only reading of acme-jobs (11 code files)
 2026-07-31T00:00:00Z . scorer v4
 
      #  ####  ##   ##

@@ -197,7 +197,7 @@ function team(
 
 const CASES: ReadonlyArray<{ name: string; lines: () => string[] }> = [
   { name: "card-mixed", lines: () => card(MIXED, "acme-api") },
-  { name: "card-prompted-dominant", lines: () => card(PROMPTED_DOMINANT, "job-ai") },
+  { name: "card-prompted-dominant", lines: () => card(PROMPTED_DOMINANT, "acme-jobs") },
   { name: "card-prompted-only", lines: () => card(PROMPTED_ONLY, "prompted-only") },
   { name: "card-empty", lines: () => card(EMPTY, "fresh-repo") },
   { name: "card-non-code", lines: () => card(NON_CODE, "assets-only") },
@@ -255,7 +255,7 @@ const CASES: ReadonlyArray<{ name: string; lines: () => string[] }> = [
     lines: () => {
       const { reading } = readingOf(PROMPTED_DOMINANT);
       const file = selectFile(reading, "src/agents/router.ts");
-      return renderExplain(reading, file, plainTerm(), meta("job-ai"));
+      return renderExplain(reading, file, plainTerm(), meta("acme-jobs"));
     },
   },
   {
@@ -361,7 +361,7 @@ const CASES: ReadonlyArray<{ name: string; lines: () => string[] }> = [
   { name: "paydown-mixed", lines: () => paydown(MIXED, "acme-api") },
   {
     name: "paydown-full",
-    lines: () => paydown(PROMPTED_DOMINANT, "job-ai", { meta: { full: true } }),
+    lines: () => paydown(PROMPTED_DOMINANT, "acme-jobs", { meta: { full: true } }),
   },
   {
     name: "paydown-color",
@@ -376,7 +376,7 @@ const CASES: ReadonlyArray<{ name: string; lines: () => string[] }> = [
     // this reading and passes further down the ladder, and the command printed
     // beside it is the exact invocation that answers it.
     name: "paydown-gate",
-    lines: () => paydown(PROMPTED_DOMINANT, "job-ai", { maxBlind: 40 }),
+    lines: () => paydown(PROMPTED_DOMINANT, "acme-jobs", { maxBlind: 40 }),
   },
   {
     // The composed ladder: a `--without` baseline under it. The baseline is
@@ -466,7 +466,7 @@ const FILE_CASES: ReadonlyArray<{
     text: () => {
       const { reading } = readingOf(PROMPTED_DOMINANT);
       const file = selectFile(reading, "src/agents/router.ts");
-      return serializeJson(explainDocument({ reading, meta: meta("job-ai") }, file));
+      return serializeJson(explainDocument({ reading, meta: meta("acme-jobs") }, file));
     },
   },
   {

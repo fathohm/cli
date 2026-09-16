@@ -28,9 +28,10 @@ afterAll(() => {
 /**
  * The scoring adapter, checked against numbers that already exist.
  *
- * The golden values below are not this file's opinion. `0.3184` is what the
- * founder's job-ai reading printed for a file its only author hand-wrote 44
- * days earlier; `0.2546` is documind at 101 days; `1/3` is a fresh solo commit
+ * The golden values below are not this file's opinion. `0.3184` is what a real
+ * reading of the founder's own code printed for a file its only author
+ * hand-wrote 44 days earlier; `0.2546` is the same shape at 101 days; `1/3` is
+ * a fresh solo commit
  * and the ceiling of any PR-mediated file is its floor plus exactly 0.4. If one
  * of these moves, either the scorer changed (in which case the dashboard moved
  * too, and that is the news) or the CLI stopped running the scorer.
@@ -123,7 +124,7 @@ describe("golden numerics — the live readings, reproduced locally", () => {
     expect(reading.floorBlindBytes).toBe(0);
   });
 
-  it("scores hand-written-44-days-ago at 0.3184 — above the line (job-ai)", () => {
+  it("scores hand-written-44-days-ago at 0.3184 — above the line", () => {
     const reading = read(
       extractOf([{ daysAgo: 44, paths: ["src/a.ts"] }], [{ path: "src/a.ts", bytes: 100 }]),
     );
@@ -136,7 +137,7 @@ describe("golden numerics — the live readings, reproduced locally", () => {
     expect(reading.scoredBytes).toBe(100);
   });
 
-  it("scores hand-written-101-days-ago at 0.2546 — below (documind)", () => {
+  it("scores hand-written-101-days-ago at 0.2546 — below the line", () => {
     const reading = read(
       extractOf([{ daysAgo: 101, paths: ["src/a.ts"] }], [{ path: "src/a.ts", bytes: 100 }]),
     );

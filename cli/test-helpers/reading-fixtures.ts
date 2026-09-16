@@ -24,7 +24,7 @@ import { ADA, CLAUDE_TRAILER, GRACE, type Identity } from "./fixture-repo";
  *
  * The four shapes mirror readings that actually exist:
  *   - `mixed` — fathohm: most of it faded, a working corner still fresh.
- *   - `promptedDominant` — job-ai: agent-written, three small files hand-touched.
+ *   - `promptedDominant` — acme-jobs: agent-written, three small files hand-touched.
  *   - `promptedOnly` — everything prompted, nothing PR-mediated: no spread.
  *   - `empty` — a repository with no commits at all.
  */
@@ -388,8 +388,11 @@ export const MIXED: ExtractFixture = {
 };
 
 /**
- * job-ai's shape: agent-written throughout, three small files hand-touched
- * inside the window. The reading the founder had to ask an assistant about.
+ * The prompted-dominant shape: agent-written throughout, three small files
+ * hand-touched inside the window. Taken from a real reading the founder had to
+ * ask an assistant about — the repository is theirs and private, so the fixture
+ * carries its SHAPE under a fictional name. The numbers are the scorer's and
+ * reproduce from the arithmetic either way.
  */
 export const PROMPTED_DOMINANT: ExtractFixture = {
   tree: [

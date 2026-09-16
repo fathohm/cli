@@ -1,4 +1,4 @@
-FATHOHM -- git-only reading of job-ai . the paydown ladder
+FATHOHM -- git-only reading of acme-jobs . the paydown ladder
 2026-07-31T00:00:00Z . scorer v4
 git records no reviews -- every rung below is this reading re-scored as if one
 existed
