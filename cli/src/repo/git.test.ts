@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { mkdtempSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -5,7 +6,7 @@ import path from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
 
 import { EXIT, isCliError } from "../cmd/errors";
-import { gitCommandLine, runGit, runGitOutcome, streamGit } from "./git";
+import { INHERITED_ENV_NAMES, gitCommandLine, runGit, runGitOutcome, streamGit } from "./git";
 import {
   cleanupFixtureRepos,
   createFixtureRepo,
@@ -70,16 +71,95 @@ describe("runGit", () => {
     }
   });
 
-  it("does not hand the machine's secrets to git", async () => {
+  it("passes through the config pairs a CI runner declares, and nothing beside them", async () => {
+    // `GIT_CONFIG_COUNT` is how a container hands git its `safe.directory`.
     const repo = repoWithOneCommit();
-    process.env.FATHOHM_TEST_SECRET = "sk-should-not-leak";
+    const before = { ...process.env };
+    process.env.GIT_CONFIG_COUNT = "1";
+    process.env.GIT_CONFIG_KEY_0 = "core.bigFileThreshold";
+    process.env.GIT_CONFIG_VALUE_0 = "7m";
+    process.env.GIT_CONFIG_KEY_9 = "core.ignoreCase"; // past the count: not declared
+    process.env.GIT_CONFIG_VALUE_9 = "true";
     try {
       const out = await runGit(repo.dir, ["-c", "alias.dumpenv=!env", "dumpenv"]);
       const env = out.toString("utf8");
-      expect(env).toContain("PATH=");
-      expect(env).not.toContain("sk-should-not-leak");
+      expect(env).toContain("GIT_CONFIG_VALUE_0=7m");
+      expect(env).not.toContain("GIT_CONFIG_KEY_9");
+    } finally {
+      for (const name of Object.keys(process.env)) {
+        if (!(name in before)) delete process.env[name];
+      }
+    }
+  });
+
+  it("hands git nothing the policy does not name", async () => {
+    // The claim, not a canary: the child's environment is a SUBSET of the
+    // declared set. A test that only looked for one planted secret would pass
+    // while every other variable on the machine went through, which is exactly
+    // how 1.6.0 shipped.
+    const repo = repoWithOneCommit();
+    process.env.FATHOHM_TEST_SECRET = "sk-should-not-leak";
+    process.env.AWS_SECRET_ACCESS_KEY = "sk-also-not-this";
+    try {
+      const DUMP = ["-c", "alias.dumpenv=!env", "dumpenv"];
+      const namesOf = (text: string): string[] =>
+        text
+          .split("\n")
+          .filter((line) => line.includes("="))
+          .map((line) => line.slice(0, line.indexOf("=")));
+
+      const text = (await runGit(repo.dir, DUMP)).toString("utf8");
+      // What git RECEIVED is not what fathohm PASSED, so the difference is what
+      // gets asserted. Two other parties add names to that dump: git exports its
+      // own `GIT_*` to an alias, the shell running `env` adds PWD/SHLVL/_, and
+      // on macOS `/usr/bin/git` is an xcrun shim that injects SDKROOT, CPATH,
+      // LIBRARY_PATH and MANPATH into whatever it launches — none of which this
+      // process ever held. A control run, whose environment this test dictates
+      // completely, cancels all of them out.
+      const control = namesOf(
+        execFileSync("git", DUMP, {
+          cwd: repo.dir,
+          encoding: "utf8",
+          // Cast: this repo's `ProcessEnv` augmentation demands NODE_ENV, and
+          // the point of the control is an environment with nothing else in it.
+          env: { PATH: process.env.PATH ?? "" } as unknown as NodeJS.ProcessEnv,
+        }),
+      );
+      const passed = namesOf(text).filter((name) => !control.includes(name));
+      const declared = new Set([
+        ...INHERITED_ENV_NAMES,
+        "LC_ALL",
+        "GIT_OPTIONAL_LOCKS",
+        "GIT_PAGER",
+        "GIT_TERMINAL_PROMPT",
+      ]);
+      const unexplained = passed.filter((name) => !declared.has(name));
+
+      expect(unexplained, `fathohm handed git ${unexplained.join(", ")}`).toEqual([]);
+      expect(text).toContain("PATH=");
+      expect(text).not.toContain("sk-should-not-leak");
+      expect(text).not.toContain("sk-also-not-this");
     } finally {
       delete process.env.FATHOHM_TEST_SECRET;
+      delete process.env.AWS_SECRET_ACCESS_KEY;
+    }
+  });
+
+  it("ignores GIT_CONFIG_PARAMETERS, the config a parent `git -c` exports", async () => {
+    // A git hook runs under whatever `git -c …` invoked it, and git passes that
+    // config down this variable. Inherited, it would reach past HERMETIC_CONFIG
+    // and rewrite authorship — the `GIT_DIR` bug's quieter sibling.
+    const repo = repoWithOneCommit();
+    repo.write(".mailmap", "Someone Else <else@example.dev> <ada@example.dev>\n");
+    repo.commit({ message: "add mailmap", date: "2026-01-03T00:00:00+00:00", files: {} });
+    const original = process.env.GIT_CONFIG_PARAMETERS;
+    process.env.GIT_CONFIG_PARAMETERS = "'log.mailmap'='true'";
+    try {
+      const out = await runGit(repo.dir, ["log", "-1", "--pretty=format:%an"]);
+      expect(out.toString("utf8")).toBe("Ada Lovelace");
+    } finally {
+      if (original === undefined) delete process.env.GIT_CONFIG_PARAMETERS;
+      else process.env.GIT_CONFIG_PARAMETERS = original;
     }
   });
 });

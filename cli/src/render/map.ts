@@ -1,4 +1,4 @@
-import { statSync, writeFileSync } from "node:fs";
+import { lstatSync, realpathSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { CliError, EXIT } from "../cmd/errors";
@@ -66,11 +66,37 @@ export function resolveMapTarget(cwd: string, out: string | null): string {
 /** Writes the page, turning every filesystem failure into an error that names
  *  the path and one next step. */
 export function writeMapFile(target: string, html: string): number {
-  let existing: ReturnType<typeof statSync> | null = null;
+  // `lstat`, never `stat`: the difference is the whole of the paragraph below.
+  let existing: ReturnType<typeof lstatSync> | null = null;
   try {
-    existing = statSync(target);
+    existing = lstatSync(target);
   } catch {
     existing = null;
+  }
+
+  /**
+   * NEVER THROUGH A SYMLINK, and the repository is the attacker here.
+   *
+   * A repository can commit `fathohm-map.html` as a symlink to anything the
+   * user can write — `~/.ssh/authorized_keys`, `~/.zshrc`, a CI artifact — and
+   * `fathohm map` with NO ARGUMENTS writes to that name by default. Following
+   * the link would destroy the target with 8KB of HTML, on the say-so of a repo
+   * the user only meant to read. It also walked straight through the `.git`
+   * refusal above, which inspects the string the caller typed and cannot see
+   * where a link points.
+   *
+   * Refused rather than resolved: a link that a clone put there is not a path
+   * anybody asked to write, and `--out` names the real one in the one case
+   * where somebody did.
+   */
+  if (existing !== null && existing.isSymbolicLink()) {
+    throw new CliError(
+      EXIT.usage,
+      `refusing to write through a symlink: ${target}`,
+      "a symbolic link with this name is already there, and following it would " +
+        "overwrite whatever it points at — delete it, or pass `--out` with the " +
+        "path you actually want written.",
+    );
   }
   if (existing !== null && existing.isDirectory()) {
     throw new CliError(
@@ -78,6 +104,22 @@ export function writeMapFile(target: string, html: string): number {
       `--out names a directory that already exists: ${target}`,
       "pass a file path — fathohm writes one HTML file and never a tree.",
     );
+  }
+
+  // And the same question about the PARENT: `out/` can itself be a link into
+  // the object store, which the string-level guard also cannot see.
+  try {
+    const parent = realpathSync(path.dirname(target));
+    if (parent.split(path.sep).includes(".git")) {
+      throw new CliError(
+        EXIT.usage,
+        `refusing to write inside .git: ${target} resolves into ${parent}`,
+        "a directory on this path is a link into the object store — pick a path outside it.",
+      );
+    }
+  } catch (error) {
+    // A parent that does not exist is the write's problem to report, below.
+    if (error instanceof CliError) throw error;
   }
 
   try {

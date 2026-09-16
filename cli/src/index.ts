@@ -86,7 +86,17 @@ export function processIo(): CliIo {
     stderr: (chunk) => {
       process.stderr.write(chunk);
     },
-    env: process.env,
+    // The six the renderer and the picker gates actually read — `term.ts` takes
+    // the first four, `tty/selector.ts` the last two. Handing over the whole
+    // environment gave every one of them reach they never asked for.
+    env: {
+      NO_COLOR: process.env.NO_COLOR,
+      FORCE_COLOR: process.env.FORCE_COLOR,
+      COLORFGBG: process.env.COLORFGBG,
+      COLUMNS: process.env.COLUMNS,
+      TERM: process.env.TERM,
+      CI: process.env.CI,
+    },
     isTTY: process.stdout.isTTY === true,
     stdinIsTTY: process.stdin.isTTY === true,
     columns: process.stdout.columns,

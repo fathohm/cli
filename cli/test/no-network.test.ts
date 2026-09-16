@@ -268,10 +268,34 @@ describe("E. the bundle's filesystem calls are exactly the documented ones", () 
       readFileSync: 1,
       // `fathohm map`, writing the single HTML path the user named.
       writeFileSync: 1,
-      // Sizes and presence. Never contents.
-      statSync: 2,
+      // `spawnFailed`, telling a missing directory apart from a missing git.
+      statSync: 1,
+      // `detectGrafts`, asking whether `info/grafts` is there.
       existsSync: 1,
+      // Both in `writeMapFile`, and both are the symlink defence: `lstat` sees
+      // the link itself rather than what it points at, and `realpath` resolves
+      // the parent so a linked directory cannot smuggle the write into `.git`.
+      // A repository can commit a symlink named `fathohm-map.html`; before
+      // these two, the default `fathohm map` wrote straight through it.
+      lstatSync: 1,
+      realpathSync: 1,
     });
+  });
+
+  it("never reads the environment wholesale, only the names it asks for", () => {
+    // The published bundle is read as TEXT by whoever decides whether to
+    // install it, and an expression that walks the environment reads as "copies
+    // every variable at once" however narrow the filter after it — 1.6.0 was
+    // reported for `...process.env`, and 1.6.1 for an `Object.entries` loop that
+    // kept four git variables.
+    //
+    // The PROPERTY, not a list of spellings: every `process.env` in the artifact
+    // is followed by `.name` or `[name]`. That covers the spread, every
+    // `Object.*` walk, `JSON.stringify`, `for (x in …)`, `env: process.env` —
+    // and the spellings nobody has thought of yet. A denylist of four strings
+    // would have passed 1.6.0 and 1.6.1 both.
+    const wholesale = bundle.match(/process\.env(?![.[])/g);
+    expect(wholesale, `the bundle reads the environment wholesale: ${wholesale?.join(", ")}`).toBeNull();
   });
 
   it("names no filesystem call that could read a source file wholesale", () => {

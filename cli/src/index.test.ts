@@ -44,12 +44,12 @@ describe("--version", () => {
   it("prints the pinned string and nothing else", async () => {
     const result = await run(["--version"]);
     expect(result.code).toBe(EXIT.ok);
-    expect(result.stdout).toBe("fathohm 1.6.1 (scorer v4)\n");
+    expect(result.stdout).toBe("fathohm 1.6.2 (scorer v4)\n");
     expect(result.stderr).toBe("");
   });
 
   it("prints the same string from the short alias", async () => {
-    expect((await run(["-V"])).stdout).toBe("fathohm 1.6.1 (scorer v4)\n");
+    expect((await run(["-V"])).stdout).toBe("fathohm 1.6.2 (scorer v4)\n");
   });
 });
 

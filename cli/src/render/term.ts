@@ -177,7 +177,14 @@ export interface TermOptions {
 }
 
 export function createTerm(options: TermOptions = {}): Term {
-  const env = options.env ?? process.env;
+  // Named, not the whole environment: a caller that supplies none still only
+  // exposes the four variables a terminal is asked about.
+  const env = options.env ?? {
+    NO_COLOR: process.env.NO_COLOR,
+    FORCE_COLOR: process.env.FORCE_COLOR,
+    COLORFGBG: process.env.COLORFGBG,
+    COLUMNS: process.env.COLUMNS,
+  };
   const isTTY = options.isTTY ?? process.stdout.isTTY === true;
   const columns = options.columns ?? process.stdout.columns;
 

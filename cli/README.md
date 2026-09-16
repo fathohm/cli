@@ -111,6 +111,44 @@ is an instrument for it, not a coinage of it.
 
 ---
 
+## What changed in 1.6.2
+
+One fix, and it is about how the published file READS as much as what it does.
+
+1.6.1 stopped handing git your whole environment, but it still found the four
+`GIT_CONFIG_COUNT` variables by walking every variable on the machine and
+keeping the ones that matched. Nothing else was ever copied — and a
+supply-chain scanner reading the published bundle as text saw
+`Object.entries(process.env)` and reported, correctly for what it can see,
+that fathohm "reads your whole environment".
+
+Now every variable git inherits is looked up by name, and the list is short
+enough to print:
+
+```
+PATH                                    find the git the user's own shell runs
+HOME  XDG_CONFIG_HOME                   where ~/.gitconfig lives — which is how
+GIT_CONFIG_GLOBAL  GIT_CONFIG_SYSTEM    git sees the safe.directory a CI
+GIT_CONFIG_NOSYSTEM                     container needs to read the repo at all
+GIT_CONFIG_COUNT + the pairs it declares
+USERPROFILE  HOMEDRIVE  HOMEPATH  APPDATA  LOCALAPPDATA  SYSTEMROOT
+SYSTEMDRIVE  WINDIR  COMSPEC  PATHEXT  PROGRAMDATA  TEMP  TMP   (Windows)
+```
+
+Nothing else reaches git, and nothing enumerates the environment. `TZ`,
+`GIT_EXEC_PATH` and `TMPDIR` were dropped in the same pass, each after a test
+showed the reading does not depend on it. Note what is *not* there:
+`GIT_DIR`, `GIT_WORK_TREE`, `GIT_INDEX_FILE`, `GIT_NAMESPACE` and
+`GIT_CONFIG_PARAMETERS` — the variables that would quietly make fathohm report
+a different repository or history under your repository's name.
+
+The CLI's own output gets the same treatment: the renderer is handed the six
+variables it reads (`NO_COLOR`, `FORCE_COLOR`, `COLORFGBG`, `COLUMNS`, `TERM`,
+`CI`) instead of the environment.
+
+A test asserts this about the **built bundle**, not the source: every
+`process.env` in the published file is followed by a name.
+
 ## What changed in 1.6.1
 
 Bug fixes. Two of them can change a number, and both changes make it more
@@ -1247,7 +1285,7 @@ version string is part of `--version`:
 
 ```
 $ npx fathohm --version
-fathohm 1.6.1 (scorer v4)
+fathohm 1.6.2 (scorer v4)
 ```
 
 The CLI does not implement scoring. It imports the same deterministic scorer
@@ -1343,8 +1381,10 @@ Two things worth grepping for, because they are the claims:
   | --- | --- | --- |
   | `readFileSync` | 1 | the `.fathohm.toml` you wrote — the only file it reads |
   | `writeFileSync` | 1 | the one HTML path you name on `fathohm map` |
-  | `statSync` | 2 | sizes, never contents |
+  | `statSync` | 1 | is that directory there, or is git missing |
   | `existsSync` | 1 | is there a grafts file (replacements are asked of git) |
+  | `lstatSync` | 1 | is the map's target a symlink — if so, nothing is written |
+  | `realpathSync` | 1 | where the map's parent directory really is, before writing |
 
   No call opens a file in your source tree. `fetch(`, `http`, `net`, `tls` and
   `WebSocket` appear zero times; the sole `https` is the string

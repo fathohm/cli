@@ -1,6 +1,6 @@
 {
   "fathohm": {
-    "cliVersion": "1.6.1",
+    "cliVersion": "1.6.2",
     "scorerVersion": "v4"
   },
   "command": "fade",
